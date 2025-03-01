@@ -1,16 +1,16 @@
 import { Task } from "@prisma/client"
 import { Select } from "./Select"
 import { formatDate } from "../shared/utils/formatDate"
-import { removeTask, updateTask } from "../hooks/useTasks"
-import { FocusEventHandler, useState } from "react"
+import { useRemoveTask, useUpdateTask } from "../hooks/useTasks"
+import { useState } from "react"
 
 export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
 
     const [title, setTitle] = useState(task.title)
     const [description, setDescription] = useState(task.description ?? 'not filled')
 
-    const deleteTask = removeTask()
-    const updateTaskById = updateTask()
+    const deleteTask = useRemoveTask()
+    const updateTaskById = useUpdateTask()
 
 
     const onBlurTitleHandler = () => {

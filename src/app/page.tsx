@@ -1,7 +1,7 @@
 'use client'
 
-import { ChangeEventHandler, FormEventHandler, useCallback, useState } from "react";
-import { createNewTask, useTasks } from "../hooks/useTasks";
+import { ChangeEventHandler, FormEventHandler, useState } from "react";
+import { useCreateNewTask, useTasks } from "../hooks/useTasks";
 import { IFormDataCreateTask } from "../types/types";
 import { TaskItem } from "../components/Task";
 import { SelectStatus } from "../components/SelectStatus";
@@ -15,7 +15,7 @@ export default function Home() {
 
 
   const { data, isFetching, error, isError } = useTasks(status)
-  const createTask = createNewTask()
+  const createTask = useCreateNewTask()
 
 
   const changeHandler: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {

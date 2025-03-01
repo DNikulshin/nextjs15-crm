@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from '@prisma/client'
+import { Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { IFormDataCreateTask } from '../types/types'
 
@@ -60,7 +60,7 @@ const update = async (task: Task): Promise<{ id: string }> => {
 
 }
 
-const removeTask = () => {
+const useRemoveTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: remove,
@@ -80,7 +80,7 @@ const useTasks = (status?: string) => {
     })
 }
 
-const updateTask = () => {
+const useUpdateTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: update,
@@ -91,7 +91,7 @@ const updateTask = () => {
 
 }
 
-const createNewTask = () => {
+const useCreateNewTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: create,
@@ -102,4 +102,4 @@ const createNewTask = () => {
 
 }
 
-export { useTasks, createNewTask, removeTask, updateTask }
+export { useTasks,useCreateNewTask, useUpdateTask, useRemoveTask }

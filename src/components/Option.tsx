@@ -1,5 +1,3 @@
-import { updateTask } from "../hooks/useTasks"
-
 export const Option = ({ item }: { item: { value: string } }) => {
 
 

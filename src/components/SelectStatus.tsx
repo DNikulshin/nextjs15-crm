@@ -1,5 +1,3 @@
-import { ChangeEventHandler, useState } from "react"
-
 export const dataTSelectStatus = [
     { value: 'All' },
     { value: 'new' },

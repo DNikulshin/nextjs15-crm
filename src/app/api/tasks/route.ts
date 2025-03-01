@@ -1,6 +1,6 @@
 import { Task, TaskStatus } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/prismaClient";
-import { IFormDataCreateTask, ISortedDateTasks } from "../../../types/types";
+import { IFormDataCreateTask } from "../../../types/types";
 
 export async function GET(req: Request) {
     try {

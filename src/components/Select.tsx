@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { updateTask } from "../hooks/useTasks"
+import { useUpdateTask } from "../hooks/useTasks"
 import { Task, TaskStatus } from "@prisma/client"
 import { Option } from './Option'
 
@@ -18,7 +18,7 @@ export const Select = ({ task }: { task: Task }) => {
 
     const [taskStatus, setTaskStatus] = useState(task.status)
 
-    const updateTaskById = updateTask()
+    const updateTaskById = useUpdateTask()
 
     return (
         <select
