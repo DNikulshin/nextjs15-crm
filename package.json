@@ -3,20 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --experimental-https",
-    "dev:host": "next dev --turbopack  -H 192.168.1.111",
+    "dev": "next dev --turbopack",
+    "dev:https": "next dev --turbopack  --experimental-https",
+    "dev:host": "next dev --turbopack  -H 192.168.1.111 --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:init": "npx prisma generate && npx prisma migrate dev init"
+    "prisma:init": "npx prisma generate && npx prisma migrate dev init",
+    "install": "npm run prisma:init && npm run build"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
     "@tanstack/react-query": "^5.66.10",
+    "jose": "^6.0.8",
     "next": "15.2.0",
     "next-pwa": "^5.6.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

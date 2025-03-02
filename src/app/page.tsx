@@ -1,21 +1,25 @@
 'use client'
 
-import { ChangeEventHandler, FormEventHandler, useState } from "react";
-import { useCreateNewTask, useTasks } from "../hooks/useTasks";
+import { ChangeEventHandler, FormEventHandler, useEffect, useState } from "react";
+import { useCreateNewTask, useTasks, useUserId } from "../hooks/useTasks";
 import { IFormDataCreateTask } from "../types/types";
 import { TaskItem } from "../components/Task";
 import { SelectStatus } from "../components/SelectStatus";
+import { logout } from "./login/actions";
+
 
 export default function Home() {
+  const { data: userIdSession, isFetching: isFetchingUserId } = useUserId()
 
   const [formValue, setFormValue] = useState<IFormDataCreateTask>(
-    { title: '', description: '', userId: '831d0a73-b095-479a-b057-8b0c537b5925' });
+    { title: '', description: '', userId: userIdSession ? userIdSession : '' });
 
   const [status, setStatus] = useState('')
 
-
   const { data, isFetching, error, isError } = useTasks(status)
   const createTask = useCreateNewTask()
+
+
 
 
   const changeHandler: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
@@ -29,15 +33,15 @@ export default function Home() {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const loginFormData = new FormData();
-    if (!formValue.title || !formValue.description || !formValue.userId) return;
+    if (!formValue.title || !formValue.description || !userIdSession) return;
     loginFormData.append('title', formValue.title.trim());
     loginFormData.append('description', formValue.description.trim())
-    loginFormData.append('userId', formValue.userId.trim())
-    console.log(formValue);
+    loginFormData.append('userId', userIdSession)
+
 
     createTask.mutate(formValue, {
       onSuccess: () => {
-        setFormValue({ title: '', description: '', userId: '831d0a73-b095-479a-b057-8b0c537b5925' })
+        setFormValue({ title: '', description: '', userId: userIdSession })
       },
       onError: (error) => {
         console.log(error);
@@ -47,13 +51,26 @@ export default function Home() {
 
   };
 
+  if (isFetchingUserId) {
+    return <div>Loading...</div>
+  }
+
 
   if (isError) {
     return <div className="h-screen flex justify-center items-center text-red-500 font-bold text-center">{(error as Error).message}</div>
   }
 
+
   return (
-    <div className="h-screen pt-4 container mx-auto">
+    <div className="h-screencontainer mx-auto">
+      <header className="flex justify-between items-center p-2">
+        <div>{userIdSession}</div>
+        <button
+          className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer"
+          onClick={() => logout()}>
+          Logout
+        </button>
+      </header>
       <main className="flex flex-col justify-center items-center mx-2 pb-3">
         <form
           onSubmit={handleSubmit}
@@ -73,6 +90,8 @@ export default function Home() {
             onChange={changeHandler}
             value={formValue.description}
           />
+
+          <input hidden name="userId" />
 
 
           <button type="submit"

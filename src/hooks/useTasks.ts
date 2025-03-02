@@ -1,12 +1,14 @@
 import { Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { IFormDataCreateTask } from '../types/types'
+import { getUserId } from '@/app/login/actions'
 
 const fetchPosts = async (status?: string): Promise<Task[]> => {
     try {
-        const response = await fetch(`/api/tasks${status ? `?status=${status}` : ''}`)
-        return await response.json()
 
+        const response = await fetch(`/api/tasks${status ? `?status=${status}` : ''}`)
+
+        return await response.json()
 
     } catch (error) {
 
@@ -14,6 +16,7 @@ const fetchPosts = async (status?: string): Promise<Task[]> => {
     }
 
 }
+
 
 const create = async (task: IFormDataCreateTask): Promise<Task> => {
     try {
@@ -80,6 +83,18 @@ const useTasks = (status?: string) => {
     })
 }
 
+
+
+const useUserId = () => {
+
+    return useQuery({
+        queryKey: ['useId'],
+        queryFn: () => getUserId(),
+
+    })
+}
+
+
 const useUpdateTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
@@ -102,4 +117,4 @@ const useCreateNewTask = () => {
 
 }
 
-export { useTasks,useCreateNewTask, useUpdateTask, useRemoveTask }
+export { useTasks, useCreateNewTask, useUpdateTask, useRemoveTask, useUserId }
