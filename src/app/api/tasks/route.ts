@@ -51,7 +51,7 @@ export async function GET(req: Request) {
             where: whereClause,
             orderBy: [
                 { updatedAt: 'asc' },
-                { status: 'asc' }
+                { status: 'desc' }
             ]
         });
 
