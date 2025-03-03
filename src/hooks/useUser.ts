@@ -1,21 +1,21 @@
-import { Task } from '@prisma/client'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+//import { Task } from '@prisma/client'
+import { useQuery } from '@tanstack/react-query'
 import { getUserId } from '@/app/login/actions'
 // import { IFormDataCreateTask } from '../types/types'
 // import { getUserId } from '@/app/login/actions'
 
-const fetchUser = async (id?: string): Promise<Task[]> => {
-    try {
+// const fetchUser = async (id?: string): Promise<Task[]> => {
+//     try {
 
-        const response = await fetch(`/api/users/${id}`)
+//         const response = await fetch(`/api/users/${id}`)
 
-        return await response.json()
+//         return await response.json()
 
-    } catch (error) {
+//     } catch (error) {
 
-        throw error
-    }
-}
+//         throw error
+//     }
+// }
 
 
 // const create = async (task: IFormDataCreateTask): Promise<Task> => {
@@ -74,13 +74,13 @@ const fetchUser = async (id?: string): Promise<Task[]> => {
 
 // }
 
-const useGetUser = (id?: string) => {
-    return useQuery({
-        queryKey: ['tasks', id],
-        queryFn: () => fetchUser(),
+// const useGetUser = (id?: string) => {
+//     return useQuery({
+//         queryKey: ['tasks', id],
+//         queryFn: () => fetchUser(),
 
-    })
-}
+//     })
+// }
 
 
 

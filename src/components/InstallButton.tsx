@@ -18,27 +18,27 @@ const InstallButton = () => {
         return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     }, []);
 
-const handleInstallClick = async () => {
-    if (deferredPrompt) {
-       
-        interface DeferredPrompt extends Event {
-            prompt: () => Promise<void>;
-            userChoice: Promise<{ outcome: string }>;
-        }
+    const handleInstallClick = async () => {
+        if (deferredPrompt) {
 
-        const promptEvent = deferredPrompt as DeferredPrompt;
-        await promptEvent.prompt();
-        const { outcome } = await promptEvent.userChoice;
-        setDeferredPrompt(null);
-        setIsInstallable(false);
-        console.log(`User response to the install prompt: ${outcome}`);
-    }
-};
+            interface DeferredPrompt extends Event {
+                prompt: () => Promise<void>;
+                userChoice: Promise<{ outcome: string }>;
+            }
+
+            const promptEvent = deferredPrompt as DeferredPrompt;
+            await promptEvent.prompt();
+            const { outcome } = await promptEvent.userChoice;
+            setDeferredPrompt(null);
+            setIsInstallable(false);
+            console.log(`User response to the install prompt: ${outcome}`);
+        }
+    };
 
     return (
         <>
             {isInstallable && (
-                <button onClick={handleInstallClick} className="install-button bg-green-500 px-2">
+                <button onClick={handleInstallClick} className="install-button bg-green-500 px-2 flex">
                     Install App
                 </button>
             )}
