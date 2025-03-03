@@ -50,8 +50,9 @@ export async function GET(req: Request) {
         const tasks = await prismaClient.task.findMany({
             where: whereClause,
             orderBy: [
-                { updatedAt: 'asc' },
-                { status: 'desc' }
+                { status: 'asc' },
+                { updatedAt: 'desc' },
+
             ]
         });
 
