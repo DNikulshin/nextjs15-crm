@@ -38,7 +38,7 @@ const handleInstallClick = async () => {
     return (
         <>
             {isInstallable && (
-                <button onClick={handleInstallClick} className="install-button">
+                <button onClick={handleInstallClick} className="install-button bg-green-500 px-2">
                     Install App
                 </button>
             )}

@@ -18,9 +18,10 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: #ffffff;
+  background: #2b2828;
   font-family: Arial, Helvetica, sans-serif;
+  /* position: relative; */
 }
 
 
@@ -30,7 +31,7 @@ body {
 }
 
 .inWork {
-  color: blue;
+  color: rgb(185, 194, 60);
   font: bold;
 }
 

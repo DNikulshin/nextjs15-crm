@@ -50,7 +50,6 @@ export async function getSessionUserId() {
   const session = (await cookies()).get("session");
   if (session) {
     const payload = await decrypt(session.value);
-    console.log(payload?.userId);
 
     return payload?.userId
   }

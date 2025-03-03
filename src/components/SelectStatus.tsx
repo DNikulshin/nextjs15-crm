@@ -16,10 +16,10 @@ export const SelectStatus = (
             status: string
         }) => {
     return (
-        <div className="flex px-2 py-2 justify-start items-center gap-2 mb-2">
+        <div className="flex px-2 py-2 justify-start items-center gap-2">
             <span>Filtered Status:</span>
             <select
-                className={`flex self-start px-2 gap-2 items-center rounded-sm cursor-pointer text-center border outline-none ${status}`}
+                className={`flex self-start px-2 gap-2 items-center rounded-sm cursor-pointer text-center border outline-none bg-slate-400 ${status}`}
                 onChange={(e) => setStatus(e.target.value)}
                 value={status}
             >

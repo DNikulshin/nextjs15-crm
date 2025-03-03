@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useUpdateTask } from "../hooks/useTasks"
+import { useUpdateTask } from "../hooks/useTask"
 import { Task, TaskStatus } from "@prisma/client"
 import { Option } from './Option'
 

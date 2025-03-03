@@ -1,12 +1,19 @@
 import { Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { IFormDataCreateTask } from '../types/types'
-import { getUserId } from '@/app/login/actions'
 
-const fetchPosts = async (status?: string): Promise<Task[]> => {
+const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<Task[]> => {
     try {
 
-        const response = await fetch(`/api/tasks${status ? `?status=${status}` : ''}`)
+        const params = new URLSearchParams({
+            ...(status ? { status } : {}),
+            ...(startDate ? { startDate } : {}),
+            ...(endDate ? { endDate } : {})
+        });
+
+        const response = await fetch(`/api/tasks?${params.toString()}`);
+
+        // const response = await fetch(`/api/tasks${status ? `?status=${status}` : ''}${startDate ? `?startDate=${startDate}` : ''}${endDate ? `?endDate=${endDate}` : ''} `)
 
         return await response.json()
 
@@ -16,7 +23,6 @@ const fetchPosts = async (status?: string): Promise<Task[]> => {
     }
 
 }
-
 
 const create = async (task: IFormDataCreateTask): Promise<Task> => {
     try {
@@ -74,26 +80,14 @@ const useRemoveTask = () => {
 
 }
 
-const useTasks = (status?: string) => {
+const useTasks = ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }) => {
 
     return useQuery({
-        queryKey: ['tasks', status],
-        queryFn: () => fetchPosts(status),
+        queryKey: ['tasks', status,  startDate, endDate],
+        queryFn: () => fetcTasks({ status, startDate, endDate }),
 
     })
 }
-
-
-
-const useUserId = () => {
-
-    return useQuery({
-        queryKey: ['useId'],
-        queryFn: () => getUserId(),
-
-    })
-}
-
 
 const useUpdateTask = () => {
     const queryClient = useQueryClient()
@@ -117,4 +111,4 @@ const useCreateNewTask = () => {
 
 }
 
-export { useTasks, useCreateNewTask, useUpdateTask, useRemoveTask, useUserId }
+export { useTasks, useCreateNewTask, useUpdateTask, useRemoveTask }

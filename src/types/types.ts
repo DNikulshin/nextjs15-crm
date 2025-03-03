@@ -1,7 +1,7 @@
 export interface IFormDataCreateTask {
     title: string,
     description: string,
-    userId: string | null
+    userId?: string | null
 }
 
 
