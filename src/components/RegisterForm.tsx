@@ -11,7 +11,12 @@ export function RegisterForm() {
   return (
     <form action={registerAction} className="flex max-w-[300px] flex-col gap-3 h-screen justify-center items-center mx-auto">
       <div className="flex flex-col gap-2">
-        <input id="email" name="email" placeholder="Email" className="px-2 py-1 rounded-sm" />
+        <input
+          id="email"
+          name="email"
+          placeholder="Email"
+          className="px-2 py-1 rounded-sm border border-white"
+        />
       </div>
       {state?.errors?.email && (
         <p className="text-red-500">{state.errors.email}</p>
@@ -23,7 +28,7 @@ export function RegisterForm() {
           name="password"
           type="password"
           placeholder="Password"
-          className="px-2 py-1 rounded-sm"
+          className="px-2 py-1 rounded-sm border border-white"
         />
       </div>
       {state?.errors?.password && (

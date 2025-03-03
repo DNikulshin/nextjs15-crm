@@ -11,13 +11,18 @@ export function LoginForm() {
   return (
     <form action={loginAction} className="flex max-w-[300px] flex-col gap-3 h-screen justify-center items-center mx-auto">
       <div className="flex flex-col gap-2">
-        <input id="email" name="email" placeholder="Email" className="px-2 py-1 rounded-sm" />
+        <input
+          id="email"
+          name="email"
+          placeholder="Email"
+          className="px-2 py-1 rounded-sm border border-white"
+        />
       </div>
       {state?.errors?.email && (
         <p className="text-red-500">{state.errors.email}</p>
       )}
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 border border-white">
         <input
           id="password"
           name="password"
