@@ -44,8 +44,6 @@ export default function Home() {
     if (!formValue.title || !formValue.description || !userIdFromSession) return;
     loginFormData.append('title', formValue.title.trim());
     loginFormData.append('description', formValue.description.trim())
-    // loginFormData.append('userId', userIdSession)
-
 
     createTask.mutate({ ...formValue, userId: userIdFromSession }, {
       onSuccess: () => {
@@ -76,6 +74,10 @@ export default function Home() {
     return <div className="h-screen flex justify-center items-center text-red-500 font-bold text-center">{(error as Error).message}</div>
   }
 
+
+
+  console.log(startDate, endDate);
+
   return (
     <div className="h-screen mx-auto">
       <header className="flex justify-between items-center p-3 shadow-sm shadow-amber-100 mb-3">
@@ -105,9 +107,6 @@ export default function Home() {
             onChange={changeHandler}
             value={formValue.description}
           />
-
-          {/* <input hidden name="userId" /> */}
-
 
           <button type="submit"
             disabled={createTask.isPending}
@@ -154,8 +153,6 @@ export default function Home() {
               </strong>
               }
             </div>
-
-
 
             {data?.map((task, idx) => (
               <TaskItem task={task} idx={idx} key={task.id} />

@@ -34,42 +34,46 @@ export const FilterByDate = (
                     checked={isSingleDate}
                     onChange={() => {
                         setIsSingleDate(true)
+                        setEndDate('')
                     }}
                 />
                 One date
             </label>
             <label className="flex gap-1  px-2 py-1">
                 <input
+                    className="text-white"
                     type="radio"
                     checked={!isSingleDate}
-                    onChange={() => setIsSingleDate(false)}
+                    onChange={() => {
+                        setIsSingleDate(false)
+                    }}
                 />
                 Date range
             </label>
 
             {isSingleDate ? (
-                <div className="flex gap-3 bg-slate-400 items-start justify-start rounded-sm">
+                <div className="flex gap-2 bg-slate-400 items-start justify-start rounded-sm">
                     <input
-                        className=" bg-slate-400 px-2 rounded-sm"
-                        type="date"
+                        className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1"
+                        type="datetime-local"
                         onChange={e => {
                             setStartDate(e.target.value)
-                            setEndDate(e.target.value)
+                            setEndDate('')
                         }}
                         value={startDate}
                     />
                 </div>
             ) : (
-                <div className="flex gap-3 items-start justify-start rounded-sm">
+                <div className="flex gap-2 items-start justify-start rounded-sm">
                     <input
-                        className=" bg-slate-400 px-2 rounded-sm"
-                        type="date"
+                        className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1"
+                        type="datetime-local"
                         onChange={e => setStartDate(e.target.value)}
                         value={startDate}
                     />
                     <input
-                        className=" bg-slate-400 px-2  rounded-sm"
-                        type="date"
+                        className="bg-slate-400 rounded-sm  text-white text-sm px-2 py-1"
+                        type="datetime-local"
                         onChange={e => setEndDate(e.target.value)}
                         value={endDate}
                     />

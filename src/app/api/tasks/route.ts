@@ -1,94 +1,76 @@
 import { Task, TaskStatus } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/prismaClient";
 import { IFormDataCreateTask } from "../../../types/types";
-// import { useUserId } from "@/hooks/useUser";
+import { format, parseISO } from 'date-fns'
 
 export async function GET(req: Request) {
     try {
-
-        const url = new URL(req.url)
-        const status = url.searchParams.get('status') as TaskStatus
-        const startDate = url.searchParams.get('startDate')
-        const endDate = url.searchParams.get('endDate')
+        const url = new URL(req.url);
+        const status = url.searchParams.get('status') as TaskStatus;
+        const startDate = url.searchParams.get('startDate');
+        const endDate = url.searchParams.get('endDate');
 
         const whereClause: { updatedAt?: { gte?: Date; lte?: Date }, status?: TaskStatus } = {};
-    
+
         if (status) {
-            whereClause.status = status; 
+            whereClause.status = status;
         }
 
-        if (startDate) {
+        if (startDate && !endDate) {
+            const parsedDate = parseISO(startDate);
+            const outputDate = format(parsedDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            const startOfDay = new Date(outputDate);
+            const endOfDay = new Date(startOfDay);
+            endOfDay.setHours(23, 59, 59, 999);
+
             whereClause.updatedAt = {
-                gte: new Date(startDate)
+                gte: startOfDay,
+                lte: endOfDay
             };
         }
 
-        if (endDate) {
-            const endDateObj = new Date(endDate);
-            endDateObj.setHours(23, 59, 59, 999); // Устанавливаем время на конец дня
+        if (startDate && endDate) {
+            const parsedStartDate = parseISO(startDate);
+            const outputStartDate = format(parsedStartDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
             whereClause.updatedAt = {
-                ...whereClause.updatedAt,
-                lte: endDateObj
+                gte: new Date(outputStartDate)
             };
+
+            const parsedEndDate = parseISO(endDate);
+            const outputEndDate = format(parsedEndDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+            whereClause.updatedAt.lte = new Date(outputEndDate);
         }
 
+
+        console.log(whereClause);
 
 
         const tasks = await prismaClient.task.findMany({
             where: whereClause,
             orderBy: [
-                { status: 'asc' },
-                { updatedAt: 'desc' }
+                { updatedAt: 'asc' },
+                { status: 'asc' }
             ]
-        })
+        });
 
-        return new Response(JSON.stringify(tasks
-            //     .sort((a, b) => {
-            //     if (a.status === 'new' && b.status !== 'new') {
-            //         return -1
-            //     }
-            //     if (a.status !== 'new' && b.status === 'new') {
-            //         return 1
-            //     }
-            //     return 0
-            // })
-        ),
-            // tasks.sort((a, b) => {
-            //     return b.updatedAt.getTime() - a.updatedAt.getTime()
-            // })), 
-            {
-                status: 200,
-                headers: { "Content-Type": "application/json" }
-            })
+        return new Response(JSON.stringify(tasks), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+        });
 
     } catch (error) {
-
         throw new Response(JSON.stringify(error), {
             status: 500,
             headers: { "Content-Type": "application/json" }
-        })
-
+        });
     }
-
 }
 
 export async function POST(req: Request) {
     try {
-
         const newTask: IFormDataCreateTask = await req.json()
-
-        // const { data: useridSession } = useUserId()
-
-
-        // const userId = newTask.userId
-
-
-        // if (userId !== useridSession) {
-        //     throw new Response(JSON.stringify({ error: "Unauthorized userId" }), {
-        //         status: 403,
-        //         headers: { "Content-Type": "application/json" }
-        //     });
-        // }
 
         const task = await prismaClient.task.create({
             data: { ...newTask },
@@ -144,7 +126,6 @@ export async function PATCH(req: Request) {
 
     }
 }
-
 
 export async function DELETE(req: Request) {
     try {

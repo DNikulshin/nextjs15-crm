@@ -77,7 +77,7 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
     };
 
     if (deleteTask.isPending) {
-        return <div className="w-full flex justify-center items-center">Delete Task...</div>
+        return <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50 loader"></div>
     }
 
     return (

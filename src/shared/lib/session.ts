@@ -47,11 +47,18 @@ export async function decrypt(session: string | undefined = "") {
 }
 
 export async function getSessionUserId() {
-  const session = (await cookies()).get("session");
-  if (session) {
-    const payload = await decrypt(session.value);
+  try {
+    const session = (await cookies()).get("session");
+    if (session) {
+      const payload = await decrypt(session.value);
 
-    return payload?.userId
+      return payload?.userId
+    }
+    
+    return null;
+
+  } catch (error) {
+    console.log("Failed to get session", error);
   }
-  return null;
+
 }
