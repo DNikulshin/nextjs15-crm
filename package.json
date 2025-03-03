@@ -6,9 +6,10 @@
     "dev": "next dev --turbopack",
     "dev:https": "next dev --turbopack  --experimental-https",
     "dev:host": "next dev --turbopack  -H 192.168.1.111 --experimental-https",
-    "build": "next build",
+    "build": "npm run prisma:init && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:init": "npx prisma generate && npx prisma migrate dev deploy"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
