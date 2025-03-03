@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "dev:https": "next dev --turbopack  --experimental-https",
+    "dev:https": "next dev  --turbopack --experimental-https",
     "dev:host": "next dev --turbopack  -H 192.168.1.111 --experimental-https",
     "build": "npm run prisma:init && next build",
     "start": "next start",
@@ -26,7 +26,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/bcrypt": "^5.0.2",
-    "@types/jsonwebtoken": "^9.0.9",
+    "@types/next-pwa": "^5.6.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

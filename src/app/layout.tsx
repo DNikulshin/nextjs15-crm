@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import type { Viewport } from 'next'
 
 export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   themeColor: 'black',
-}
 
+}
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "../providers/QueryProvider";
@@ -20,9 +24,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
   title: "CRM | Next",
   description: "Mini SRM on NextJS",
+  generator: "Next.js",
+  manifest: "/manifest.json",
+  keywords: ["nextjs", "next15", "pwa", "next-pwa"],
+  authors: [
+    {
+      name: "Nikulshin D.",
+      url: "https://github.com/DNikulshin",
+    },
+  ]
 };
 
 export default function RootLayout({
