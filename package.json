@@ -9,8 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:init": "npx prisma generate && npx prisma migrate dev init",
-    "install": "npm run prisma:init && npm run build"
+    "prisma:init": "npx prisma generate && npx prisma migrate dev init"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
