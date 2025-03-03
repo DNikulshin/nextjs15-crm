@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createSession, deleteSession, getSessionUserId } from "@/shared/lib/session";
 import { redirect } from "next/navigation";
 import { prismaClient } from "@/prismaClient"
-import { createHash } from "crypto";
+import { compare } from "bcrypt";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }).trim(),
@@ -15,11 +15,7 @@ const loginSchema = z.object({
 });
 
 
-function hashPassword(password: string): string {
-  return createHash("sha256").update(password).digest("hex");
-}
-
-export async function login(prevState: any, formData: FormData) {
+export async function login(prevState: unknown, formData: FormData) {
   const result = loginSchema.safeParse(Object.fromEntries(formData));
 
   if (!result.success) {
@@ -42,9 +38,9 @@ export async function login(prevState: any, formData: FormData) {
     };
   }
 
-  const hashedPassword = hashPassword(password)
+  const comparePassword = await compare(password, user.passwordHash);
 
-  if (user.passwordHash !== hashedPassword) {
+  if (!comparePassword) {
     return {
       errors: {
         email: ["Invalid email or password"],

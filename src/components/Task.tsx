@@ -3,12 +3,15 @@ import { Select } from "./Select"
 import { formatDate } from "../shared/utils/formatDate"
 import { useRemoveTask, useUpdateTask } from "../hooks/useTask"
 import { useState } from "react"
+import { CustomConfirm } from "./CustomConfirm"
 
 export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
 
     const [title, setTitle] = useState(task.title)
     const [description, setDescription] = useState(task.description ?? 'not filled')
     const [report, setReport] = useState(task.report ?? '')
+    const [isConfirmVisible, setConfirmVisible] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState('');
 
     const deleteTask = useRemoveTask()
     const updateTaskById = useUpdateTask()
@@ -55,8 +58,23 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
 
         }
     }
+    const handleDeleteClick = (taskId: string) => {
+        setTaskToDelete(taskId);
+        setConfirmVisible(true);
+    };
 
+    const handleConfirm = () => {
+        if (taskToDelete) {
+            deleteTask.mutate(taskToDelete);
+        }
+        setConfirmVisible(false);
+        setTaskToDelete('');
+    };
 
+    const handleCancel = () => {
+        setConfirmVisible(false);
+        setTaskToDelete('');
+    };
 
     if (deleteTask.isPending) {
         return <div className="w-full flex justify-center items-center">Delete Task...</div>
@@ -106,12 +124,18 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
 
             <button
                 className="text-white items-center flex justify-center absolute right-5 bg-red-500 px-2  disabled:bg-gray-400"
-                onClick={() => deleteTask.mutate(task.id)}
-
+                onClick={() => handleDeleteClick(task.id)}
                 disabled={deleteTask.isPending && updateTaskById.isPending}
             >
                 x
             </button>
+            {isConfirmVisible && (
+                <CustomConfirm
+                    message="Вы уверены, что хотите удалить эту задачу?"
+                    onConfirm={handleConfirm}
+                    onCancel={handleCancel}
+                />
+            )}
         </div>
     )
 }

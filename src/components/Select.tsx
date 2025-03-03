@@ -24,9 +24,12 @@ export const Select = ({ task }: { task: Task }) => {
         <select
             className={`rounded-sm cursor-pointer text-center border outline-none ${task.status}`}
             onChange={(e) => {
+                if (e.target.value === 'new') return
+
                 const newStatus = e.target.value as TaskStatus
 
                 setTaskStatus(newStatus)
+
                 updateTaskById.mutate(
                     {
                         ...task,

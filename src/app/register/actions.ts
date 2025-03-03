@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createSession } from "@/shared/lib/session";
 import { redirect } from "next/navigation";
 import { prismaClient } from "@/prismaClient"
-import { createHash } from "crypto";
+import { hash } from "bcrypt";
 
 const registerSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }).trim(),
@@ -39,7 +39,7 @@ export async function register(prevState: unknown, formData: FormData) {
     };
   }
 
-  const passwordHash = createHash('sha256').update(password).digest('hex');
+  const passwordHash = await hash(password, 10);
 
   const user = await prismaClient.user.create({
     data: {
