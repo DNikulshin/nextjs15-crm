@@ -64,7 +64,7 @@ export const FilterByDate = (
                     />
                 </div>
             ) : (
-                <div className="flex gap-2 items-start justify-start rounded-sm">
+                <div className="flex gap-2 items-start justify-center rounded-sm flex-wrap">
                     <input
                         className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1"
                         type="datetime-local"
