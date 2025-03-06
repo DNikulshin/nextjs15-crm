@@ -142,7 +142,7 @@ export const TaskItem = ({ idx, task, userId, userEmail }: Props) => {
 
             {(task.status !== 'new' && task.status !== 'inWork') &&
                 <div className="w-full flex flex-col py-2 justify-between  bg-slate-700/85 break-words gap-2">
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                         Report & Comment:
                         <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
                             onClick={() => setIsEditReport(!isEditREport)}
