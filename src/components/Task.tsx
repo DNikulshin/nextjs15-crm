@@ -5,7 +5,16 @@ import { useRemoveTask, useUpdateTask } from "../hooks/useTask"
 import { useState } from "react"
 import { CustomConfirm } from "./CustomConfirm"
 
-export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
+
+interface Props {
+    idx: number
+    userId: string
+    task: Task & {
+        User?: { id: string, email: string }
+    }
+}
+
+export const TaskItem = ({ idx, task, userId }: Props) => {
 
     const [title, setTitle] = useState(task.title)
     const [description, setDescription] = useState(task.description ?? 'not filled')
@@ -85,14 +94,16 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
 
     return (
         <div key={task.id} className="flex flex-col py-2 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-10">
-            <span className="flex gap-2">
+            <div className="flex gap-2">
                 Title:
-                <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
+                {(task.userId === userId) && <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
                     onClick={() => setIsEditTitle(!isEditTitle)}
                 >
                     {isEditTitle ? 'Save' : "Edit"}
-                </button>
-            </span>
+                </button>}
+                <span className="text">{task?.User?.email}</span>
+            </div>
+
             {isEditTitle && <textarea
                 className="border px-2 py-1  min-h-fit"
                 onChange={(e) => setTitle(e.target.value)}
@@ -104,11 +115,11 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
 
             <span className="flex gap-2">
                 Description:
-                <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
+                {(task.userId === userId) && <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
                     onClick={() => setIsEditDescription(!isEditDescription)}
                 >
                     {isEditDescription ? 'Save' : "Edit"}
-                </button>
+                </button>}
 
             </span>
             {isEditDescription && <textarea
@@ -130,33 +141,33 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
 
             {(task.status !== 'new' && task.status !== 'inWork') &&
                 <div className="w-full flex flex-col py-2 justify-between  bg-slate-700/85 break-words gap-2">
-                    <span className="flex gap-2">
+                    <div className="flex gap-2">
                         Report:
                         <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
                             onClick={() => setIsEditReport(!isEditREport)}
                         >
                             {isEditREport ? 'Save' : "Edit"}
                         </button>
-                    </span>
+                        <span className="text">{task?.User?.email}</span>
+                    </div>
                     {isEditREport && <textarea
                         className="border px-2 py-1 min-h-fit"
                         onChange={(e) => setReport(e.target.value)}
                         value={report}
                         onBlur={onBlurReportHandler}
                     />}
+
                     <p className="shadow-md px-2 py-2">{report}</p>
                 </div>
-
-
             }
 
-            <button
+            {(task.userId === userId) && <button
                 className="text-white items-center flex justify-center absolute right-5 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
                 onClick={() => handleDeleteClick(task.id)}
                 disabled={deleteTask.isPending && updateTaskById.isPending}
             >
                 x
-            </button>
+            </button>}
             {isConfirmVisible && (
                 <div className={"retative inset-0 bg-black bg-opacity-50 z-10"}
 

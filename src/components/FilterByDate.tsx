@@ -48,13 +48,14 @@ export const FilterByDate = (
                     <input
                         className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1"
                         type="date"
-                        placeholder="DD/MM/YYYY"
+
                         onChange={e => {
                             setStartDate(e.target.value)
                             setEndDate('')
                         }}
                         value={startDate}
                     />
+                    {/* {!startDate && <span>'DD/MM/YYYY'</span>} */}
                 </div>
             ) : (
                 <div className="flex gap-2 items-start justify-center rounded-sm flex-wrap">

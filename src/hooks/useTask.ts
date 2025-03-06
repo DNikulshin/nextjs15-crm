@@ -2,7 +2,7 @@ import { Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { IFormDataCreateTask } from '../types/types'
 
-const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<Task[]> => {
+const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<Task[] & { user?: { id: string, email: string } }> => {
     try {
 
         const params = new URLSearchParams({
@@ -83,7 +83,7 @@ const useRemoveTask = () => {
 const useTasks = ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }) => {
 
     return useQuery({
-        queryKey: ['tasks', status,  startDate, endDate],
+        queryKey: ['tasks', status, startDate, endDate],
         queryFn: () => fetcTasks({ status, startDate, endDate }),
 
     })

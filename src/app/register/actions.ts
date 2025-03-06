@@ -48,7 +48,7 @@ export async function register(prevState: unknown, formData: FormData) {
     },
   });
 
-  await createSession(user.id);
+  await createSession(user.id, user.email);
 
   redirect("/");
 }

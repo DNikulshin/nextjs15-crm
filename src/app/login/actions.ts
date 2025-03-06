@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { createSession, deleteSession, getSessionUserId } from "@/shared/lib/session";
+import { createSession, deleteSession, getSessionUser, SessionPayload } from "@/shared/lib/session";
 import { redirect } from "next/navigation";
 import { prismaClient } from "@/prismaClient"
 import { compare } from "bcrypt";
@@ -48,7 +48,7 @@ export async function login(prevState: unknown, formData: FormData) {
     };
   }
 
-  await createSession(user.id);
+  await createSession(user.id, user.email);
 
   redirect("/");
 }
@@ -59,6 +59,6 @@ export async function logout() {
 }
 
 
-export async function getUserId(): Promise<string> {
-  return await getSessionUserId() as string
+export async function getUser(): Promise<SessionPayload | undefined> {
+  return await getSessionUser() as SessionPayload
 }

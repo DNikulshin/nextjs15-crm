@@ -1,6 +1,6 @@
 //import { Task } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query'
-import { getUserId } from '@/app/login/actions'
+import { getUser } from '@/app/login/actions'
 // import { IFormDataCreateTask } from '../types/types'
 // import { getUserId } from '@/app/login/actions'
 
@@ -117,13 +117,13 @@ import { getUserId } from '@/app/login/actions'
 // }
 
 
-const useUserId = () => {
+const useUser = () => {
 
     return useQuery({
-        queryKey: ['useId'],
-        queryFn: () => getUserId()
+        queryKey: ['user'],
+        queryFn: () => getUser()
     })
 }
 
 
-export { useUserId }
+export { useUser }

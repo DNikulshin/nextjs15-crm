@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from "@prisma/client";
+import { Task, TaskStatus, User } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/prismaClient";
 import { IFormDataCreateTask } from "../../../types/types";
 // import { format, parseISO } from 'date-fns'
@@ -60,11 +60,20 @@ export async function GET(req: Request) {
 
         const tasks = await prismaClient.task.findMany({
             where: whereClause,
+            include: {
+                User: {
+                    select: {
+                        id: true,
+                        email: true
+                    }
+                }
+            },
             orderBy: [
                 { status: 'asc' },
                 { updatedAt: 'desc' },
 
-            ]
+            ],
+
         });
 
         return new Response(JSON.stringify(tasks), {
@@ -114,13 +123,15 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
     try {
 
-        const updateTask: Task = await req.json()
+        const updateTask: Task & { User?: User } = await req.json()
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { User, ...taskData } = updateTask;
 
         const task = await prismaClient.task.update({
             where: {
                 id: updateTask.id
             },
-            data: { ...updateTask }
+            data: { ...taskData }
         })
 
         return new Response(JSON.stringify(task), {

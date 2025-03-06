@@ -2,7 +2,7 @@
 
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import { useCreateNewTask, useTasks } from "../hooks/useTask";
-import { useUserId } from "@/hooks/useUser";
+import { useUser } from "@/hooks/useUser";
 import { IFormDataCreateTask } from "../types/types";
 import { TaskItem } from "../components/Task";
 import { SelectStatus } from "../components/SelectStatus";
@@ -12,7 +12,7 @@ import { FilterByDate } from "@/components/FilterByDate";
 
 
 export default function Home() {
-  const { data: userIdFromSession, isFetching: isFetchingUserId } = useUserId()
+  const { data: userFromSession, isFetching: isFetchingUserId } = useUser()
   const [visibleCreateForm, setVisibleCreateForm] = useState(false)
   const [formValue, setFormValue] = useState<IFormDataCreateTask>(
     { title: '', description: '' });
@@ -37,13 +37,13 @@ export default function Home() {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const loginFormData = new FormData();
-    if (!formValue.title || !formValue.description || !userIdFromSession) return;
+    if (!formValue.title || !formValue.description || !userFromSession?.userId) return;
     loginFormData.append('title', formValue.title.trim());
     loginFormData.append('description', formValue.description.trim())
 
-    createTask.mutate({ ...formValue, userId: userIdFromSession }, {
+    createTask.mutate({ ...formValue, userId: userFromSession?.userId }, {
       onSuccess: () => {
-        setFormValue({ title: '', description: '', userId: userIdFromSession })
+        setFormValue({ title: '', description: '', userId: userFromSession?.userId })
         setVisibleCreateForm(false)
       },
       onError: (error) => {
@@ -68,10 +68,13 @@ export default function Home() {
     return <div className="h-screen flex justify-center items-center text-red-500 font-bold text-center">{(error as Error).message}</div>
   }
 
+
+  console.log(data);
+
   return (
     <div className="h-screen mx-auto">
       <header className="flex justify-between items-center p-3 shadow-sm shadow-amber-100 mb-3 flex-wrap gap-2 sticky top-0 z-30 bg-slate-800/90">
-        <div>UserId: {userIdFromSession}</div>
+        <div>User: {userFromSession?.userEmail}</div>
         <button onClick={() => setVisibleCreateForm(!visibleCreateForm)} className=" bg-green-600 px-3 py-1 rounded-md">Create task</button>
         <button
           className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer"
@@ -85,7 +88,7 @@ export default function Home() {
             <form
               onSubmit={handleSubmit}
               onClick={e => e.stopPropagation()}
-              className="w-full flex gap-3 flex-col px-4 pt-8 pb-4 md:w-1/2 bg-gray-900 shadow-sm shadow-amber-100 fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50">
+              className="w-full flex gap-3 flex-col px-4 pt-8 pb-4 md:w-1/2 bg-gray-900 shadow-sm shadow-amber-100 fixed top-[30%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50">
               <span>Title:</span>
               <textarea
                 placeholder="Enter title..."
@@ -162,7 +165,7 @@ export default function Home() {
             </div>
 
             {data?.map((task, idx) => (
-              <TaskItem task={task} idx={idx} key={task.id} />
+              <TaskItem task={task} idx={idx} key={task.id} userId={userFromSession?.userId ?? ''}/>
             ))}
           </div>
         }
