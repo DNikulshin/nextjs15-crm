@@ -149,7 +149,7 @@ export const TaskItem = ({ idx, task, userId, userEmail }: Props) => {
                         >
                             {isEditREport ? 'Save' : "Edit"}
                         </button>
-                        <span className="text">{task?.User?.email}</span>
+                        <span className="text">{userEmail}</span>
                     </div>
                     {isEditREport && <textarea
                         className="border px-2 py-1 min-h-fit"
