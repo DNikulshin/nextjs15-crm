@@ -2,8 +2,8 @@
 {
     "name": "CRM | Next",
     "short_name": "Mini CRM | NextJS",
-    "theme_color": "#35155D",
-    "background_color": "#ffffff",
+    "theme_color": "#2b2828",
+    "background_color": "#2b2828",
     "display": "standalone",
     "orientation": "portrait",
     "scope": "/",
