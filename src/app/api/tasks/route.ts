@@ -1,7 +1,10 @@
 import { Task, TaskStatus } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/prismaClient";
 import { IFormDataCreateTask } from "../../../types/types";
-import { format, parseISO } from 'date-fns'
+// import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns-tz'
+
+const timeZone = 'Europe/Moscow';
 
 export async function GET(req: Request) {
     try {
@@ -17,35 +20,43 @@ export async function GET(req: Request) {
         }
 
         if (startDate && !endDate) {
-            const parsedDate = parseISO(startDate);
-            const outputDate = format(parsedDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            const startOfDay = new Date(outputDate);
-            const endOfDay = new Date(startOfDay);
+            const startOfDay = new Date(startDate);
+            const endOfDay = new Date(startDate);
+
+            startOfDay.setHours(0, 0, 0, 0);
+
             endOfDay.setHours(23, 59, 59, 999);
 
+            const formatStartDate = format(startOfDay, 'yyyy-MM-dd HH:mm:ss', { timeZone });
+
+            const formatEndDate = format(endOfDay, 'yyyy-MM-dd HH:mm:ss', { timeZone });
+
             whereClause.updatedAt = {
-                gte: startOfDay,
-                lte: endOfDay
+                gte: new Date(formatStartDate)
+                ,
+                lte: new Date(formatEndDate)
             };
         }
 
         if (startDate && endDate) {
-            const parsedStartDate = parseISO(startDate);
-            const outputStartDate = format(parsedStartDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+            const startOfDay = new Date(startDate);
+            const endOfDay = new Date(endDate);
+
+            startOfDay.setHours(0, 0, 0, 0);
+
+            endOfDay.setHours(23, 59, 59, 999);
+
+            const formatStartDate = format(startOfDay, 'yyyy-MM-dd HH:mm:ss', { timeZone });
+
+            const formatEndDate = format(endOfDay, 'yyyy-MM-dd HH:mm:ss', { timeZone });
 
             whereClause.updatedAt = {
-                gte: new Date(outputStartDate)
+                gte: new Date(formatStartDate)
+                ,
+                lte: new Date(formatEndDate)
             };
-
-            const parsedEndDate = parseISO(endDate);
-            const outputEndDate = format(parsedEndDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
-            whereClause.updatedAt.lte = new Date(outputEndDate);
         }
-
-
-        console.log(whereClause);
-
 
         const tasks = await prismaClient.task.findMany({
             where: whereClause,

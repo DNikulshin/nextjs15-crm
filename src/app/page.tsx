@@ -13,7 +13,7 @@ import { FilterByDate } from "@/components/FilterByDate";
 
 export default function Home() {
   const { data: userIdFromSession, isFetching: isFetchingUserId } = useUserId()
-
+  const [visibleCreateForm, setVisibleCreateForm] = useState(false)
   const [formValue, setFormValue] = useState<IFormDataCreateTask>(
     { title: '', description: '' });
 
@@ -22,13 +22,9 @@ export default function Home() {
   const [endDate, setEndDate] = useState('');
   const [isSingleDate, setIsSingleDate] = useState(false);
 
-
   const { data, isFetching, error, isError } = useTasks({ status, endDate, startDate })
 
   const createTask = useCreateNewTask()
-
-
-
 
   const changeHandler: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
     setFormValue({
@@ -48,6 +44,7 @@ export default function Home() {
     createTask.mutate({ ...formValue, userId: userIdFromSession }, {
       onSuccess: () => {
         setFormValue({ title: '', description: '', userId: userIdFromSession })
+        setVisibleCreateForm(false)
       },
       onError: (error) => {
         console.log(error);
@@ -56,12 +53,10 @@ export default function Home() {
     })
   };
 
-
   const taskCounts: Record<string, number> = data?.reduce((acc: Record<string, number>, task) => {
     acc[task.status] = (acc[task.status] || 0) + 1;
     return acc;
   }, {}) || {};
-
 
   if (isFetchingUserId) {
     return <div className="h-screen flex justify-center items-center text-blue-500 font-bold text-center">
@@ -69,19 +64,15 @@ export default function Home() {
     </div>
   }
 
-
   if (isError) {
     return <div className="h-screen flex justify-center items-center text-red-500 font-bold text-center">{(error as Error).message}</div>
   }
 
-
-
-  console.log(startDate, endDate);
-
   return (
     <div className="h-screen mx-auto">
-      <header className="flex justify-between items-center p-3 shadow-sm shadow-amber-100 mb-3">
+      <header className="flex justify-between items-center p-3 shadow-sm shadow-amber-100 mb-3 flex-wrap gap-2">
         <div>UserId: {userIdFromSession}</div>
+        <button onClick={() => setVisibleCreateForm(!visibleCreateForm)} className=" bg-green-600 px-3 py-1 rounded-md">Create task</button>
         <button
           className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer"
           onClick={() => logout()}>
@@ -89,9 +80,9 @@ export default function Home() {
         </button>
       </header>
       <main className="flex flex-col justify-center items-center mx-auto pb-3 container px-2">
-        <form
+        {visibleCreateForm && <form
           onSubmit={handleSubmit}
-          className="w-full flex gap-3 flex-col mx-auto p-4 md:w-1/2 sticky bg-gray-900 z-5 top-0 mb-4 shadow-sm shadow-amber-100">
+          className="w-full flex gap-3 flex-col mx-auto px-4 pt-8 pb-4 md:w-1/2 sticky bg-gray-900 z-5 top-0 mb-4 shadow-sm shadow-amber-100">
           <input
             type="text"
             placeholder="Enter title..."
@@ -113,9 +104,22 @@ export default function Home() {
             className="flex bg-green-600 px-3 py-1 cursor-pointer disabled:bg-gray-400 self-end rounded-md">
             Create
           </button>
+          <button
+            className="text-white items-center flex justify-center absolute top-0 right-0 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
+            onClick={() => setVisibleCreateForm(false)}
+          >
+            x
+          </button>
         </form>
+        }
+        <div className="flex justify-center items-center flex-wrap shadow-sm shadow-amber-100 px-2 py-1 mb-3 gap-2 relative">
+          {
 
-        <div className="flex justify-center items-center flex-wrap shadow-sm shadow-amber-100 px-2 py-1 mb-3 gap-2">
+            isFetching &&
+            <div className="flex justify-center items-center text-blue-700 font-bold text-center  absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+              Update...
+            </div>
+          }
           <FilterByDate
             startDate={startDate}
             setStartDate={setStartDate}
@@ -123,7 +127,6 @@ export default function Home() {
             setEndDate={setEndDate}
             isSingleDate={isSingleDate}
             setIsSingleDate={setIsSingleDate}
-            isFetching={isFetching}
           />
 
           <SelectStatus

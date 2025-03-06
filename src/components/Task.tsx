@@ -81,7 +81,7 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
     }
 
     return (
-        <div key={task.id} className="flex flex-col py-2 px-4 justify-between  bg-slate-700/85 break-words gap-3 relative">
+        <div key={task.id} className="flex flex-col py-2 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-1">
             <span> Title:</span>
             <input
                 className="border px-2 py-1"
@@ -123,18 +123,22 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
             }
 
             <button
-                className="text-white items-center flex justify-center absolute right-5 bg-red-500 px-2  disabled:bg-gray-400"
+                className="text-white items-center flex justify-center absolute right-5 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
                 onClick={() => handleDeleteClick(task.id)}
                 disabled={deleteTask.isPending && updateTaskById.isPending}
             >
                 x
             </button>
             {isConfirmVisible && (
-                <CustomConfirm
-                    message="Вы уверены, что хотите удалить эту задачу?"
-                    onConfirm={handleConfirm}
-                    onCancel={handleCancel}
-                />
+                <div className={"retative inset-0 bg-black bg-opacity-50 z-10"}
+
+                    onClick={handleCancel}>
+                    <CustomConfirm
+                        message="Вы уверены, что хотите удалить эту задачу?"
+                        onConfirm={handleConfirm}
+                        onCancel={handleCancel}
+                    />
+                </div>
             )}
         </div>
     )
