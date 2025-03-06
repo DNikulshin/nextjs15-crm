@@ -165,7 +165,7 @@ export default function Home() {
             </div>
 
             {data?.map((task, idx) => (
-              <TaskItem task={task} idx={idx} key={task.id} userId={userFromSession?.userId ?? ''}/>
+              <TaskItem task={task} idx={idx} key={task.id} userId={userFromSession?.userId ?? ''} userEmail={userFromSession?.userEmail ?? ''} />
             ))}
           </div>
         }

@@ -8,13 +8,14 @@ import { CustomConfirm } from "./CustomConfirm"
 
 interface Props {
     idx: number
-    userId: string
+    userId: string,
+    userEmail: string,
     task: Task & {
         User?: { id: string, email: string }
     }
 }
 
-export const TaskItem = ({ idx, task, userId }: Props) => {
+export const TaskItem = ({ idx, task, userId, userEmail }: Props) => {
 
     const [title, setTitle] = useState(task.title)
     const [description, setDescription] = useState(task.description ?? 'not filled')
@@ -101,7 +102,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                 >
                     {isEditTitle ? 'Save' : "Edit"}
                 </button>}
-                <span className="text">{task?.User?.email}</span>
+                <span className="text">{userEmail}</span>
             </div>
 
             {isEditTitle && <textarea
@@ -142,7 +143,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
             {(task.status !== 'new' && task.status !== 'inWork') &&
                 <div className="w-full flex flex-col py-2 justify-between  bg-slate-700/85 break-words gap-2">
                     <div className="flex gap-2">
-                        Report:
+                        Report & Comment:
                         <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
                             onClick={() => setIsEditReport(!isEditREport)}
                         >
