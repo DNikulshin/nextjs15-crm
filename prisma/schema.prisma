@@ -23,7 +23,7 @@ model Task {
   description String?
   status      TaskStatus @default(new)
   report      String?
-  User        User?      @relation(fields: [userId], references: [id])
+  user        User?      @relation(fields: [userId], references: [id])
   userId      String?
 
   createdAt DateTime @default(now())

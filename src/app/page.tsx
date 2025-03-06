@@ -75,12 +75,14 @@ export default function Home() {
     <div className="h-screen mx-auto">
       <header className="flex justify-between items-center p-3 shadow-sm shadow-amber-100 mb-3 flex-wrap gap-2 sticky top-0 z-30 bg-slate-800/90">
         <div>User: {userFromSession?.userEmail}</div>
-        <button onClick={() => setVisibleCreateForm(!visibleCreateForm)} className=" bg-green-600 px-3 py-1 rounded-md">Create task</button>
-        <button
-          className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer"
-          onClick={() => logout()}>
-          Logout
-        </button>
+        <div className="flex justify-between gap-3 items-center w-full">
+          <button onClick={() => setVisibleCreateForm(!visibleCreateForm)} className=" bg-green-600 px-3 py-1 rounded-md  cursor-pointer">Create task</button>
+          <button
+            className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer"
+            onClick={() => logout()}>
+            Logout
+          </button>
+        </div>
       </header>
       <main className="flex flex-col justify-center items-center mx-auto pb-3 container px-2">
         {visibleCreateForm &&
@@ -165,7 +167,7 @@ export default function Home() {
             </div>
 
             {data?.map((task, idx) => (
-              <TaskItem task={task} idx={idx} key={task.id} userId={userFromSession?.userId ?? ''} userEmail={userFromSession?.userEmail ?? ''} />
+              <TaskItem task={task} idx={idx} key={task.id} userId={userFromSession?.userId ?? ''} />
             ))}
           </div>
         }

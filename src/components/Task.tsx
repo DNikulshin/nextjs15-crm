@@ -9,13 +9,12 @@ import { CustomConfirm } from "./CustomConfirm"
 interface Props {
     idx: number
     userId: string,
-    userEmail: string,
     task: Task & {
-        User?: { id: string, email: string }
+        user?: { id: string, email: string }
     }
 }
 
-export const TaskItem = ({ idx, task, userId, userEmail }: Props) => {
+export const TaskItem = ({ idx, task, userId}: Props) => {
 
     const [title, setTitle] = useState(task.title)
     const [description, setDescription] = useState(task.description ?? 'not filled')
@@ -95,14 +94,22 @@ export const TaskItem = ({ idx, task, userId, userEmail }: Props) => {
 
     return (
         <div key={task.id} className="flex flex-col py-2 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-10">
-            <div className="flex gap-2">
-                Title:
-                {(task.userId === userId) && <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
-                    onClick={() => setIsEditTitle(!isEditTitle)}
-                >
-                    {isEditTitle ? 'Save' : "Edit"}
-                </button>}
-                <span className="text">{userEmail}</span>
+            <div className="flex gap-4">
+                <span>Title:</span>
+                {(task.userId === userId) &&
+                    <button className="text-sm"
+                        onClick={() => setIsEditTitle(!isEditTitle)}
+                    >
+                        {isEditTitle
+                            ? <span className="bg-green-500/85  px-2 py-1 rounded-sm">
+                                Save
+                            </span>
+                            : <span className="bg-red-500/85  px-2 py-1 rounded-sm">
+                                Edit
+                            </span>
+                        }
+                    </button>}
+                <span className="font-bold">{task?.user?.email}</span>
             </div>
 
             {isEditTitle && <textarea
@@ -114,15 +121,22 @@ export const TaskItem = ({ idx, task, userId, userEmail }: Props) => {
             />}
             <p className="shadow-md px-2 py-2">{title}</p>
 
-            <span className="flex gap-2">
-                Description:
-                {(task.userId === userId) && <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
+            <div className="flex gap-4">
+                <span>Description:</span>
+                {(task.userId === userId) && <button className="text-sm"
                     onClick={() => setIsEditDescription(!isEditDescription)}
                 >
-                    {isEditDescription ? 'Save' : "Edit"}
+                    {isEditDescription
+                        ? <span className="bg-green-500/85  px-2 py-1 rounded-sm">
+                            Save
+                        </span>
+                        : <span className="bg-red-500/85  px-2 py-1 rounded-sm">
+                            Edit
+                        </span>
+                    }
                 </button>}
 
-            </span>
+            </div>
             {isEditDescription && <textarea
                 className="border px-2 py-1 min-h-fit"
                 onChange={(e) => setDescription(e.target.value)}
@@ -144,12 +158,19 @@ export const TaskItem = ({ idx, task, userId, userEmail }: Props) => {
                 <div className="w-full flex flex-col py-2 justify-between  bg-slate-700/85 break-words gap-2">
                     <div className="flex gap-2 flex-wrap">
                         Report & Comment:
-                        <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
+                        <button className="text-sm"
                             onClick={() => setIsEditReport(!isEditREport)}
                         >
-                            {isEditREport ? 'Save' : "Edit"}
+                            {isEditREport
+                                ? <span className="bg-green-500/85  px-2 py-1 rounded-sm">
+                                    Save
+                                </span>
+                                : <span className="bg-red-500/85  px-2 py-1 rounded-sm">
+                                    Edit
+                                </span>
+                            }
                         </button>
-                        <span className="text">{userEmail}</span>
+                        {/* <span className="text">{userEmail}</span> */}
                     </div>
                     {isEditREport && <textarea
                         className="border px-2 py-1 min-h-fit"
