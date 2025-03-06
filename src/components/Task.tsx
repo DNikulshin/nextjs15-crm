@@ -12,6 +12,9 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
     const [report, setReport] = useState(task.report ?? '')
     const [isConfirmVisible, setConfirmVisible] = useState(false);
     const [taskToDelete, setTaskToDelete] = useState('');
+    const [isEditTitle, setIsEditTitle] = useState(false)
+    const [isEditDescription, setIsEditDescription] = useState(false)
+    const [isEditREport, setIsEditReport] = useState(false)
 
     const deleteTask = useRemoveTask()
     const updateTaskById = useUpdateTask()
@@ -81,44 +84,69 @@ export const TaskItem = ({ task, idx }: { task: Task, idx: number }) => {
     }
 
     return (
-        <div key={task.id} className="flex flex-col py-2 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-1">
-            <span> Title:</span>
-            <input
-                className="border px-2 py-1"
+        <div key={task.id} className="flex flex-col py-2 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-10">
+            <span className="flex gap-2">
+                Title:
+                <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
+                    onClick={() => setIsEditTitle(!isEditTitle)}
+                >
+                    {isEditTitle ? 'Save' : "Edit"}
+                </button>
+            </span>
+            {isEditTitle && <textarea
+                className="border px-2 py-1  min-h-fit"
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
                 onBlur={onBlurTitleHandler}
 
-            />
+            />}
+            <p className="shadow-md px-2 py-2">{title}</p>
 
-            <span>Description:</span>
-            <textarea
+            <span className="flex gap-2">
+                Description:
+                <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
+                    onClick={() => setIsEditDescription(!isEditDescription)}
+                >
+                    {isEditDescription ? 'Save' : "Edit"}
+                </button>
+
+            </span>
+            {isEditDescription && <textarea
                 className="border px-2 py-1 min-h-fit"
                 onChange={(e) => setDescription(e.target.value)}
                 value={description ?? 'not filled'}
 
                 onBlur={onBlurDescriptionHandler}
 
-            />
-
-            <div className="flex gap-2">
+            />}
+            <p className="shadow-md px-2 py-2">{description}</p>
+            <div className="flex gap-2 shadow-md px-2 py-2">
                 <span>Status:</span>
                 <Select task={task} key={idx} />
             </div>
 
 
-            <div><span>UpdatedAt:</span> {formatDate({ date: task.updatedAt })}</div>
+            <div className="shadow-md px-2 py-2"><span>UpdatedAt:</span> {formatDate({ date: task.updatedAt })}</div>
 
             {(task.status !== 'new' && task.status !== 'inWork') &&
                 <div className="w-full flex flex-col py-2 justify-between  bg-slate-700/85 break-words gap-2">
-                    <span>Report:</span>
-                    <textarea
+                    <span className="flex gap-2">
+                        Report:
+                        <button className="bg-red-500/85 px-2 py-0.5 rounded-sm text-sm"
+                            onClick={() => setIsEditReport(!isEditREport)}
+                        >
+                            {isEditREport ? 'Save' : "Edit"}
+                        </button>
+                    </span>
+                    {isEditREport && <textarea
                         className="border px-2 py-1 min-h-fit"
                         onChange={(e) => setReport(e.target.value)}
                         value={report}
                         onBlur={onBlurReportHandler}
-                    />
+                    />}
+                    <p className="shadow-md px-2 py-2">{report}</p>
                 </div>
+
 
             }
 
