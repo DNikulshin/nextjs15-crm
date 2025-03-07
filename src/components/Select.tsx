@@ -8,9 +8,10 @@ import { Option } from './Option'
 export const dataTaskStatus = [
     { value: 'new' },
     { value: 'inWork' },
+    { value: 'waiting' },
     { value: 'cancelled' },
     { value: 'completed' },
-    { value: 'waiting' }
+ 
 ]
 
 

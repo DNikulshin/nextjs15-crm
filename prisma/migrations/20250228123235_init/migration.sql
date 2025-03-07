@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "TaskStatus" AS ENUM ('new', 'inWork', 'cancelled', 'completed', 'waiting');
+CREATE TYPE "TaskStatus" AS ENUM ('new', 'inWork', 'waiting', 'cancelled', 'completed');
 
 -- CreateTable
 CREATE TABLE "User" (

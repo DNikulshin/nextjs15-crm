@@ -2,9 +2,10 @@ export const dataTSelectStatus = [
     { value: 'All' },
     { value: 'new' },
     { value: 'inWork' },
+    { value: 'waiting' },
     { value: 'cancelled' },
     { value: 'completed' },
-    { value: 'waiting' }
+
 ]
 
 

@@ -71,7 +71,7 @@ export async function GET(req: Request) {
             },
             orderBy: [
                 { status: 'asc' },
-                { updatedAt: 'desc' },
+                { updatedAt: 'asc' },
 
             ],
 

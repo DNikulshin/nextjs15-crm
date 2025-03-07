@@ -33,7 +33,7 @@ model Task {
 enum TaskStatus {
   new
   inWork
+  waiting
   cancelled
   completed
-  waiting
 }
