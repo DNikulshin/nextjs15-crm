@@ -21,6 +21,7 @@ export default function Home() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isSingleDate, setIsSingleDate] = useState(false);
+  const [isLogout, setIsLogout] = useState(false)
 
   const { data, isFetching, error, isError } = useTasks({ status, endDate, startDate })
 
@@ -58,6 +59,13 @@ export default function Home() {
     return acc;
   }, {}) || {};
 
+
+  const logoutHandler = async () => {
+    setIsLogout(true)
+    await logout()
+    setIsLogout(false)
+  }
+
   if (isFetchingUserId) {
     return <div className="h-screen flex justify-center items-center text-blue-500 font-bold text-center">
       <div className="loader"></div>
@@ -68,6 +76,12 @@ export default function Home() {
     return <div className="h-screen flex justify-center items-center text-red-500 font-bold text-center">{(error as Error).message}</div>
   }
 
+  if (isLogout) {
+    return <div className="h-screen flex justify-center items-center text-blue-500 font-bold text-center">
+      <div className="loader"></div>
+    </div>
+  }
+
 
   return (
     <div className="h-screen mx-auto">
@@ -76,8 +90,9 @@ export default function Home() {
         <div className="flex justify-between gap-3 items-center w-full">
           <button onClick={() => setVisibleCreateForm(!visibleCreateForm)} className=" bg-green-600 px-3 py-1 rounded-md  cursor-pointer">Create task</button>
           <button
-            className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer"
-            onClick={() => logout()}>
+            className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer disabled:bg-gray-400"
+            disabled={isLogout}
+            onClick={logoutHandler}>
             Logout
           </button>
         </div>

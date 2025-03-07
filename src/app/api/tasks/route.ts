@@ -1,9 +1,9 @@
 import { Task, TaskStatus, User } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/prismaClient";
 import { IFormDataCreateTask } from "../../../types/types";
-import { format } from 'date-fns-tz'
+import { getDateTimeInTimeZone } from "@/shared/utils/getDateTimeInTimeZone ";
 
-const timeZone = 'Europe/Moscow';
+//const timeZone = 'Europe/Moscow';
 
 export async function GET(req: Request) {
     try {
@@ -26,9 +26,9 @@ export async function GET(req: Request) {
 
             endOfDay.setHours(23, 59, 59, 999);
 
-            const formatStartDate = format(startOfDay, 'yyyy-MM-dd HH:mm:ss', { timeZone });
+            const formatStartDate = getDateTimeInTimeZone(startOfDay, 'Europe/Moscow')
 
-            const formatEndDate = format(endOfDay, 'yyyy-MM-dd HH:mm:ss', { timeZone });
+            const formatEndDate = getDateTimeInTimeZone(endOfDay, 'Europe/Moscow')
 
             whereClause.updatedAt = {
                 gte: new Date(formatStartDate)
@@ -46,9 +46,9 @@ export async function GET(req: Request) {
 
             endOfDay.setHours(23, 59, 59, 999);
 
-            const formatStartDate = format(startOfDay, 'yyyy-MM-dd HH:mm:ss', { timeZone });
+            const formatStartDate = getDateTimeInTimeZone(startOfDay, 'Europe/Moscow')
 
-            const formatEndDate = format(endOfDay, 'yyyy-MM-dd HH:mm:ss', { timeZone });
+            const formatEndDate = getDateTimeInTimeZone(endOfDay, 'Europe/Moscow')
 
             whereClause.updatedAt = {
                 gte: new Date(formatStartDate)

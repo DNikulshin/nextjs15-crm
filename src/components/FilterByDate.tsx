@@ -44,9 +44,9 @@ export const FilterByDate = (
             </label>
 
             {isSingleDate ? (
-                <div className="flex gap-2 bg-slate-400 items-start justify-start rounded-sm">
+                <div className="flex gap-2 bg-slate-400 items-center justify-center rounded-sm text-center">
                     <input
-                        className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1"
+                        className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1  flex items-center justify-center"
                         type="date"
 
                         onChange={e => {
@@ -55,24 +55,28 @@ export const FilterByDate = (
                         }}
                         value={startDate}
                     />
-                    {/* {!startDate && <span>'DD/MM/YYYY'</span>} */}
+                    {/* {!startDate && <span className="absolute pointer-events-none sm:hidden">Change date...</span>} */}
                 </div>
             ) : (
                 <div className="flex gap-2 items-start justify-center rounded-sm flex-wrap">
-                    <input
-                        className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1"
-                        placeholder="DD/MM/YYYY"
-                        type="date"
-                        onChange={e => setStartDate(e.target.value)}
-                        value={startDate}
-                    />
-                    <input
-                        className="bg-slate-400 rounded-sm  text-white text-sm px-2 py-1"
-                        placeholder="DD/MM/YYYY"
-                        type="date"
-                        onChange={e => setEndDate(e.target.value)}
-                        value={endDate}
-                    />
+                    <div>
+                        <input
+                            className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1 flex items-center justify-center"
+                            type="date"
+                            onChange={e => setStartDate(e.target.value)}
+                            value={startDate}
+                        />
+                        {/* {!startDate && <span className="absolute pointer-events-none">Change date...</span>} */}
+                    </div>
+                    <div>
+                        <input
+                            className="bg-slate-400 rounded-sm  text-white text-sm px-2 py-1 flex items-center justify-center"
+                            type="date"
+                            onChange={e => setEndDate(e.target.value)}
+                            value={endDate}
+                        />
+                        {/* {!endDate && <span className="absolute pointer-events-none">Change date...</span>} */}
+                    </div>
                 </div>
             )}
         </div>
