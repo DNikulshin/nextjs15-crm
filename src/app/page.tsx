@@ -53,7 +53,7 @@ export default function Home() {
     })
   };
 
-  const taskCounts: Record<string, number> = data?.reduce((acc: Record<string, number>, task) => {
+  const taskCounts: Record<string, number> = data?.tasks?.reduce((acc: Record<string, number>, task) => {
     acc[task.status] = (acc[task.status] || 0) + 1;
     return acc;
   }, {}) || {};
@@ -67,6 +67,7 @@ export default function Home() {
   if (isError) {
     return <div className="h-screen flex justify-center items-center text-red-500 font-bold text-center">{(error as Error).message}</div>
   }
+
 
   return (
     <div className="h-screen mx-auto">
@@ -142,28 +143,30 @@ export default function Home() {
         </div>
 
 
-        {!data?.length && !isFetching ?
+        {!data?.tasks?.length && !isFetching ?
           <div className="flex justify-center items-center text-red-500 font-bold">No Tasks...</div>
           :
           <div className="flex flex-col border gap-3  bg-slate-800 w-full mx-2 relative z-10 shadow-sm shadow-amber-100">
-            <div className="flex flex-wrap  justify-center items-center gap-3 px-2 py-1">
-              {Object.entries(taskCounts || {}).map(([status, count]) => (
-                <div key={status} className={status}>
-                  <span className="font-bold">{status}</span>: {count}
-                </div>
-              ))}
+            <div className="flex flex-col  justify-center items-center">
+              <div className="flex flex-wrap  justify-center items-center gap-2 px-2 py-1">
+                {Object.entries(taskCounts || {}).map(([status, count]) => (
+                  <div key={status} className={status}>
+                    <span className="font-bold">{status}</span>: {count}
+                  </div>
+                ))}
+              </div>
 
-              {data && data?.length > 0 && <strong
+              {data?.totalCount && <strong
                 className="flex gap-2 justify-center items-center py-1">
                 Total count:
                 <span className="text-green-600">
-                  {data?.length}
+                  {data?.totalCount}
                 </span>
               </strong>
               }
             </div>
 
-            {data?.map((task, idx) => (
+            {data?.tasks?.map((task, idx) => (
               <TaskItem task={task} idx={idx} key={task.id} userId={userFromSession?.userId ?? ''} />
             ))}
           </div>

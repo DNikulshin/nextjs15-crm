@@ -2,7 +2,14 @@ import { Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { IFormDataCreateTask } from '../types/types'
 
-const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<Task[] & { user?: { id: string, email: string } }> => {
+
+interface ResponseData {
+    tasks: Task[],
+    user?: { id: string, email: string } 
+    totalCount: number
+}
+
+const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<ResponseData> => {
     try {
 
         const params = new URLSearchParams({
@@ -13,7 +20,8 @@ const fetcTasks = async ({ status, startDate, endDate }: { status?: string, star
 
         const response = await fetch(`/api/tasks?${params.toString()}`);
 
-        return await response.json()
+
+        return await response.json() as ResponseData
 
     } catch (error) {
 
@@ -69,11 +77,15 @@ const update = async (task: Task, signal: AbortSignal): Promise<{ id: string }> 
 const useRemoveTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: (id: string) => {
+        mutationFn: async (id: string) => {
             const controller = new AbortController()
             const signal = controller.signal
             const mutation = remove(id, signal)
-            return mutation.finally(() => controller.abort())
+            try {
+                return await mutation;
+            } finally {
+                return controller.abort();
+            }
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
@@ -93,11 +105,15 @@ const useTasks = ({ status, startDate, endDate }: { status?: string, startDate?:
 const useUpdateTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: (task: Task) => {
+        mutationFn: async (task: Task) => {
             const controller = new AbortController()
             const signal = controller.signal
             const mutation = update(task, signal)
-            return mutation.finally(() => controller.abort())
+            try {
+                return await mutation;
+            } finally {
+                return controller.abort();
+            }
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
@@ -108,11 +124,15 @@ const useUpdateTask = () => {
 const useCreateNewTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: (task: IFormDataCreateTask) => {
+        mutationFn: async (task: IFormDataCreateTask) => {
             const controller = new AbortController()
             const signal = controller.signal
             const mutation = create(task, signal)
-            return mutation.finally(() => controller.abort())
+            try {
+                return await mutation;
+            } finally {
+                return controller.abort();
+            }
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })

@@ -57,6 +57,8 @@ export async function GET(req: Request) {
             };
         }
 
+        const totalTasksCount = await prismaClient.task.count();
+
         const tasks = await prismaClient.task.findMany({
             where: whereClause,
             include: {
@@ -75,7 +77,7 @@ export async function GET(req: Request) {
 
         });
 
-        return new Response(JSON.stringify(tasks), {
+        return new Response(JSON.stringify({ tasks, totalCount: totalTasksCount }), {
             status: 200,
             headers: { "Content-Type": "application/json" }
         });
@@ -123,7 +125,7 @@ export async function PATCH(req: Request) {
     try {
 
         const updateTask: Task & { user?: User } = await req.json()
-   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { user, ...taskData } = updateTask;
 
         const task = await prismaClient.task.update({
