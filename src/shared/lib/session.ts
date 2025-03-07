@@ -37,11 +37,26 @@ export async function encrypt(payload: SessionPayload) {
 }
 
 export async function decrypt(session: string | undefined = "") {
+
   try {
+    const cookieSession = (await cookies()).get("session");
+
+    if (cookieSession && cookieSession.value !== session) {
+      console.log("Сессия в куках не совпадает с переданной сессией");
+      return null;
+    }
+
+    if (!session || typeof session !== 'string' || session.split('.').length !== 3) {
+      console.log("Некорректная сессия");
+      return null;
+    }
+
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ["HS256"],
     });
+
     return payload;
+
   } catch (error) {
     console.log("Failed to verify session", error);
   }
@@ -50,9 +65,9 @@ export async function decrypt(session: string | undefined = "") {
 export async function getSessionUser() {
   try {
     const session = (await cookies()).get("session");
+
     if (session) {
       const payload = await decrypt(session.value);
-
       return payload
     }
 

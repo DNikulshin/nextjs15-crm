@@ -68,9 +68,6 @@ export default function Home() {
     return <div className="h-screen flex justify-center items-center text-red-500 font-bold text-center">{(error as Error).message}</div>
   }
 
-
-  console.log(data);
-
   return (
     <div className="h-screen mx-auto">
       <header className="flex justify-between items-center p-3 shadow-sm shadow-amber-100 mb-3 flex-wrap gap-2 sticky top-0 z-30 bg-slate-800/90">

@@ -14,7 +14,7 @@ interface Props {
     }
 }
 
-export const TaskItem = ({ idx, task, userId}: Props) => {
+export const TaskItem = ({ idx, task, userId }: Props) => {
 
     const [title, setTitle] = useState(task.title)
     const [description, setDescription] = useState(task.description ?? 'not filled')
@@ -93,7 +93,7 @@ export const TaskItem = ({ idx, task, userId}: Props) => {
     }
 
     return (
-        <div key={task.id} className="flex flex-col py-2 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-10">
+        <div key={task.id} className="flex flex-col pb-2 pt-8 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-10">
             <div className="flex gap-4">
                 <span>Title:</span>
                 {(task.userId === userId) &&
@@ -146,7 +146,7 @@ export const TaskItem = ({ idx, task, userId}: Props) => {
 
             />}
             <p className="shadow-md px-2 py-2">{description}</p>
-            <div className="flex gap-2 shadow-md px-2 py-2">
+            <div className="flex gap-2 shadow-md px-2 pt-2 pb-4">
                 <span>Status:</span>
                 <Select task={task} key={idx} />
             </div>
@@ -154,7 +154,7 @@ export const TaskItem = ({ idx, task, userId}: Props) => {
 
             <div className="shadow-md px-2 py-2"><span>UpdatedAt:</span> {formatDate({ date: task.updatedAt })}</div>
 
-            {(task.status !== 'new' && task.status !== 'inWork') &&
+            {(task.status !== 'new') &&
                 <div className="w-full flex flex-col py-2 justify-between  bg-slate-700/85 break-words gap-2">
                     <div className="flex gap-2 flex-wrap">
                         Report & Comment:
@@ -170,7 +170,6 @@ export const TaskItem = ({ idx, task, userId}: Props) => {
                                 </span>
                             }
                         </button>
-                        {/* <span className="text">{userEmail}</span> */}
                     </div>
                     {isEditREport && <textarea
                         className="border px-2 py-1 min-h-fit"
@@ -184,7 +183,7 @@ export const TaskItem = ({ idx, task, userId}: Props) => {
             }
 
             {(task.userId === userId) && <button
-                className="text-white items-center flex justify-center absolute right-5 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
+                className="text-white items-center flex justify-center absolute right-2 top-2 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
                 onClick={() => handleDeleteClick(task.id)}
                 disabled={deleteTask.isPending && updateTaskById.isPending}
             >

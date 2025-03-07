@@ -44,9 +44,9 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button className="bg-green-500 px-2 py-1 rounded-sm cursor-pointer"
+    <button className="bg-green-500 px-2 py-1 rounded-sm cursor-pointer  disabled:bg-gray-400"
       disabled={pending} type="submit">
-      Register
+      {pending ? 'Pending...' : 'Register'}
     </button>
   );
 }
