@@ -85,7 +85,6 @@ export default function Home() {
 
   return (
     <div className="h-screen mx-auto">
-      ЛЕХА
       <header className="flex justify-between items-center p-3 shadow-sm shadow-amber-100 mb-3 flex-wrap gap-2 sticky top-0 z-30 bg-slate-800/90">
         <div>User: {userFromSession?.userEmail}</div>
         <div className="flex justify-between gap-3 items-center w-full">
