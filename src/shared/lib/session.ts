@@ -37,6 +37,10 @@ export async function encrypt(payload: SessionPayload) {
 }
 
 export async function decrypt(session: string | undefined = "") {
+  if (!session) {
+   console.log('Session token is empty or undefined')
+  }
+
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ["HS256"],

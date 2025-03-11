@@ -117,6 +117,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
             {isEditTitle && <textarea
                 className="border px-2 py-1  min-h-fit"
                 onChange={(e) => setTitle(e.target.value)}
+                spellCheck
                 value={title}
                 onBlur={onBlurTitleHandler}
 
@@ -142,6 +143,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
             {isEditDescription && <textarea
                 className="border px-2 py-1 min-h-fit"
                 onChange={(e) => setDescription(e.target.value)}
+                spellCheck
                 value={description ?? 'not filled'}
 
                 onBlur={onBlurDescriptionHandler}
@@ -176,6 +178,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                     {isEditREport && <textarea
                         className="border px-2 py-1 min-h-fit"
                         onChange={(e) => setReport(e.target.value)}
+                        spellCheck
                         value={report}
                         onBlur={onBlurReportHandler}
                     />}

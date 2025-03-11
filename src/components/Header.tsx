@@ -23,7 +23,7 @@ export const Header = ({
             <div className=" container mx-auto">
                 <div className="flex gap-2  justify-center items-center w-full mb-2"><FaUserAlt /> {userFromSessionEmail}</div>
                 <div className="flex justify-between gap-3 items-center w-full">
-                    <button onClick={() => setVisibleCreateForm(!visibleCreateForm)} className=" bg-green-600 px-3 py-1 rounded-md  cursor-pointer">Создать задачу</button>
+                    <button onClick={() => setVisibleCreateForm(!visibleCreateForm)} className=" bg-green-600 px-3 py-1 rounded-md  cursor-pointer">Создать заявку</button>
                     <button
                         className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer disabled:bg-gray-400"
                         disabled={isLogout}
