@@ -1,12 +1,13 @@
-import { Task } from '@prisma/client'
+import { Comment, Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { IFormDataCreateTask } from '../types/types'
+import { IDataTask, IFormDataCreateTask } from '../types/types'
 
 
 interface ResponseData {
     tasks: Task[],
-    user?: { id: string, email: string } 
-    totalCount: number
+    user?: { id: string, email: string }
+    totalCount: number,
+    comments?: Comment[]
 }
 
 const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<ResponseData> => {
@@ -60,7 +61,7 @@ const remove = async (id: string, signal: AbortSignal): Promise<{ id: string }> 
     }
 }
 
-const update = async (task: Task, signal: AbortSignal): Promise<{ id: string }> => {
+const update = async (task: IDataTask, signal: AbortSignal): Promise<Task> => {
     try {
         const response = await fetch('/api/tasks', {
             method: "PATCH",

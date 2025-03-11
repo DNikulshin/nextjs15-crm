@@ -1,6 +1,6 @@
 import { Task, TaskStatus, User } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/prismaClient";
-import { IFormDataCreateTask } from "../../../types/types";
+import { IDataTask, IFormDataCreateTask } from "../../../types/types";
 import { getDateTimeInTimeZone } from "@/shared/utils/getDateTimeInTimeZone ";
 
 //const timeZone = 'Europe/Moscow';
@@ -67,7 +67,23 @@ export async function GET(req: Request) {
                         id: true,
                         email: true
                     }
+                },
+                comments: {
+                    select: {
+                        id: true,
+                        content: true,
+                        updatedAt: true,
+                        userId: true,
+                        taskId: true,
+                        user: {
+                            select: {
+                                id: true,
+                                email: true
+                            }
+                        }
+                    }
                 }
+
             },
             orderBy: [
                 { status: 'asc' },
@@ -123,15 +139,20 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
     try {
 
-        const updateTask: Task & { user?: User } = await req.json()
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { user, ...taskData } = updateTask;
+        const updateTask: IDataTask = await req.json()
+
 
         const task = await prismaClient.task.update({
             where: {
                 id: updateTask.id
             },
-            data: { ...taskData }
+            data: {
+                title: updateTask.status,
+                description: updateTask.description,
+                report: updateTask.report,
+                status: updateTask.status,
+                updatedAt: updateTask.updatedAt
+            }
         })
 
         return new Response(JSON.stringify(task), {
@@ -153,7 +174,7 @@ export async function PATCH(req: Request) {
 export async function DELETE(req: Request) {
     try {
 
-        const taskId: string = await req.json()
+        const taskId = await req.json()
 
         const deleteTask = await prismaClient.task.delete({
             where: {

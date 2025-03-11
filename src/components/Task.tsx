@@ -1,5 +1,6 @@
 import { Task } from "@prisma/client"
 import { Select } from "./Select"
+import { Comments } from "./Comments"
 import { formatDate } from "../shared/utils/formatDate"
 import { useRemoveTask, useUpdateTask } from "../hooks/useTask"
 import { useState } from "react"
@@ -7,12 +8,24 @@ import { CustomConfirm } from "./CustomConfirm"
 import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
+import { TiMessages } from "react-icons/ti"
+import { MdUpdate } from "react-icons/md";
 
 interface Props {
     idx: number
     userId: string,
     task: Task & {
         user?: { id: string, email: string }
+    } & {
+        comments?: {
+            id: string
+            content: string
+            updatedAt: Date
+            user: {
+                id: string,
+                email: string
+            }
+        }[]
     }
 }
 
@@ -72,6 +85,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
 
         }
     }
+
     const handleDeleteClick = (taskId: string) => {
         setTaskToDelete(taskId);
         setConfirmVisible(true);
@@ -103,7 +117,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                         onClick={() => setIsEditTitle(!isEditTitle)}
                     >
                         {isEditTitle
-                            ? <span className="bg-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
+                            ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
                                 <FaSave className="text-xl" />
                             </span>
                             : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
@@ -114,15 +128,16 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                 <span className="flex font-bold items-center gap-2 "><FaUserAlt /> {task?.user?.email}</span>
             </div>
 
-            {isEditTitle && <textarea
-                className="border px-2 py-1  min-h-fit"
-                onChange={(e) => setTitle(e.target.value)}
-                spellCheck
-                value={title}
-                onBlur={onBlurTitleHandler}
+            {isEditTitle &&
+                <textarea
+                    className="border px-2 py-1  min-h-fit"
+                    onChange={(e) => setTitle(e.target.value)}
+                    spellCheck
+                    value={title}
+                    onBlur={onBlurTitleHandler}
 
-            />}
-            <p className="shadow-md px-2 py-2">{title}</p>
+                />}
+            <p className="shadow-md px-2 py-2 word-break">{title}</p>
 
             <div className="flex gap-4 px-2">
                 <span>Описание:</span>
@@ -130,7 +145,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                     onClick={() => setIsEditDescription(!isEditDescription)}
                 >
                     {isEditDescription
-                        ? <span className="bg-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
+                        ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
                             <FaSave className="text-xl" />
                         </span>
                         : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
@@ -140,33 +155,41 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                 </button>}
 
             </div>
-            {isEditDescription && <textarea
-                className="border px-2 py-1 min-h-fit"
-                onChange={(e) => setDescription(e.target.value)}
-                spellCheck
-                value={description ?? 'not filled'}
+            {isEditDescription &&
+                <textarea
+                    className="border px-2 py-1 min-h-fit"
+                    onChange={(e) => setDescription(e.target.value)}
+                    spellCheck
+                    value={description ?? 'not filled'}
 
-                onBlur={onBlurDescriptionHandler}
+                    onBlur={onBlurDescriptionHandler}
 
-            />}
-            <p className="shadow-md px-2 py-2">{description}</p>
+                />}
+            <p className="shadow-md px-2 py-2 word-break">{description}</p>
             <div className="flex gap-2 shadow-md px-2 pt-2 pb-4">
                 <span>Статус:</span>
                 <Select task={task} key={idx} />
             </div>
 
 
-            <div className="shadow-md px-2 py-2"><span>Дата обновления:</span> {formatDate({ date: task.updatedAt })}</div>
+            <div className="flex justify-between items-center shadow-md px-2 py-2">
+                <div className="flex gap-2">
+                    <span className="text-xl"><MdUpdate /></span>
+                    {formatDate({ date: task.updatedAt })}
+                </div>
+
+                <span className='flex text-2xl cursor-pointer hover:text-red-500/85'><TiMessages /></span>
+            </div>
 
             {(task.status !== 'new') &&
-                <div className="w-full flex flex-col py-2 justify-between  bg-slate-700/85 break-words gap-2">
-                    <div className="flex gap-2 flex-wrap px-2">
-                        Отчет или комментарий:
+                <div className="w-full flex flex-col py-2 justify-between bg-slate-700/85 gap-2">
+                    <div className="flex gap-2 flex-wrap px-2 items-center">
+                        Отчет:
                         <button className="text-sm"
                             onClick={() => setIsEditReport(!isEditREport)}
                         >
                             {isEditREport
-                                ? <span className="bg-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
+                                ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
                                     <FaSave className="text-xl" />
                                 </span>
                                 : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
@@ -175,17 +198,23 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                             }
                         </button>
                     </div>
-                    {isEditREport && <textarea
-                        className="border px-2 py-1 min-h-fit"
-                        onChange={(e) => setReport(e.target.value)}
-                        spellCheck
-                        value={report}
-                        onBlur={onBlurReportHandler}
-                    />}
+                    {isEditREport &&
+                        <textarea
+                            className="border px-2 py-1 min-h-fit"
+                            onChange={(e) => setReport(e.target.value)}
+                            spellCheck
+                            value={report}
+                            onBlur={onBlurReportHandler}
+                        />}
 
-                    <p className="shadow-md px-2 py-2">{report}</p>
+                    <p className="shadow-md px-2 py-2 word-break">{report}</p>
                 </div>
             }
+
+            <Comments
+                comments={task.comments}
+                userId={userId}
+            />
 
             {(task.userId === userId) && <button
                 className="text-white items-center flex justify-center absolute right-2 top-2 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"

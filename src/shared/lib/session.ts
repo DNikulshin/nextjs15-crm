@@ -38,8 +38,11 @@ export async function encrypt(payload: SessionPayload) {
 
 export async function decrypt(session: string | undefined = "") {
   if (!session) {
-   console.log('Session token is empty or undefined')
+    console.log('Session token is empty or undefined');
+    return null
   }
+
+  console.log("Attempting to verify session:", session);
 
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
@@ -50,12 +53,20 @@ export async function decrypt(session: string | undefined = "") {
 
   } catch (error) {
     console.log("Failed to verify session", error);
+    return null
   }
 }
 
 export async function getSessionUser() {
   try {
     const session = (await cookies()).get("session");
+
+    if (!session) {
+      console.log('Session token is empty or undefined');
+      return null
+    }
+  
+    console.log("Attempting to verify session:", session);
 
     if (session && session?.value) {
       const payload = await decrypt(session.value);
@@ -66,6 +77,7 @@ export async function getSessionUser() {
 
   } catch (error) {
     console.log("Failed to get session", error);
+    return null
   }
 
 }
