@@ -20,6 +20,7 @@ export const FilterByDate = (
 
     return (
         <div className="flex gap-2 flex-wrap justify-center items-center">
+            <span className="text-white">Фильтр по дате:</span>
             <label className="flex gap-1 px-2 py-1">
                 <input
                     type="radio"
@@ -29,7 +30,7 @@ export const FilterByDate = (
                         setEndDate('')
                     }}
                 />
-                One date
+                День
             </label>
             <label className="flex gap-1  px-2 py-1">
                 <input
@@ -40,7 +41,7 @@ export const FilterByDate = (
                         setIsSingleDate(false)
                     }}
                 />
-                Date range
+                Диапазон
             </label>
 
             {isSingleDate ? (
@@ -55,7 +56,6 @@ export const FilterByDate = (
                         }}
                         value={startDate}
                     />
-                    {/* {!startDate && <span className="absolute pointer-events-none sm:hidden">Change date...</span>} */}
                 </div>
             ) : (
                 <div className="flex gap-2 items-start justify-center rounded-sm flex-wrap">
@@ -66,7 +66,6 @@ export const FilterByDate = (
                             onChange={e => setStartDate(e.target.value)}
                             value={startDate}
                         />
-                        {/* {!startDate && <span className="absolute pointer-events-none">Change date...</span>} */}
                     </div>
                     <div>
                         <input
@@ -75,7 +74,6 @@ export const FilterByDate = (
                             onChange={e => setEndDate(e.target.value)}
                             value={endDate}
                         />
-                        {/* {!endDate && <span className="absolute pointer-events-none">Change date...</span>} */}
                     </div>
                 </div>
             )}

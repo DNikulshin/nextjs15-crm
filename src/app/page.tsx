@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEventHandler, FormEventHandler, useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useEffect, useState } from "react";
 import { useCreateNewTask, useTasks } from "../hooks/useTask";
 import { useUser } from "@/hooks/useUser";
 import { IFormDataCreateTask } from "../types/types";
@@ -8,7 +8,9 @@ import { TaskItem } from "../components/Task";
 import { SelectStatus } from "../components/SelectStatus";
 import { logout } from "./login/actions";
 import { FilterByDate } from "@/components/FilterByDate";
-
+import { Header } from "@/components/Header";
+import { CreateForm } from "@/components/CreateForm";
+import { CountTasks } from "@/components/CountTasks";
 
 
 export default function Home() {
@@ -54,17 +56,22 @@ export default function Home() {
     })
   };
 
-  const taskCounts: Record<string, number> = data?.tasks?.reduce((acc: Record<string, number>, task) => {
-    acc[task.status] = (acc[task.status] || 0) + 1;
-    return acc;
-  }, {}) || {};
-
-
   const logoutHandler = async () => {
     setIsLogout(true)
     await logout()
     setIsLogout(false)
   }
+
+  useEffect(() => {
+
+    if (typeof window !== 'undefined') {
+      const storedStatus = localStorage.getItem('selectedStatus');
+      if (storedStatus) {
+        setStatus(storedStatus);
+      }
+    }
+  }, []);
+
 
   if (isFetchingUserId) {
     return <div className="h-screen flex justify-center items-center text-blue-500 font-bold text-center">
@@ -82,57 +89,25 @@ export default function Home() {
     </div>
   }
 
-
   return (
     <div className="h-screen mx-auto">
-      <header className="flex justify-between items-center p-3 shadow-sm shadow-amber-100 mb-3 flex-wrap gap-2 sticky top-0 z-30 bg-slate-800/90">
-        <div>User: {userFromSession?.userEmail}</div>
-        <div className="flex justify-between gap-3 items-center w-full">
-          <button onClick={() => setVisibleCreateForm(!visibleCreateForm)} className=" bg-green-600 px-3 py-1 rounded-md  cursor-pointer">Create task</button>
-          <button
-            className="bg-red-500 px-2 py-1 rounded-sm cursor-pointer disabled:bg-gray-400"
-            disabled={isLogout}
-            onClick={logoutHandler}>
-            Logout
-          </button>
-        </div>
-      </header>
+      <Header
+        isLogout={isLogout}
+        logoutHandler={logoutHandler}
+        userFromSessionEmail={userFromSession?.userEmail}
+        visibleCreateForm={visibleCreateForm}
+        setVisibleCreateForm={setVisibleCreateForm}
+      />
       <main className="flex flex-col justify-center items-center mx-auto pb-3 container px-2">
         {visibleCreateForm &&
           <div className="fixed inset-0 bg-slate-800/90 bg-opacity-50 z-40 px-2 -mx-2" onClick={() => setVisibleCreateForm(false)}>
-            <form
-              onSubmit={handleSubmit}
-              onClick={e => e.stopPropagation()}
-              className="w-full flex gap-3 flex-col px-4 pt-8 pb-4 md:w-1/2 bg-gray-900 shadow-sm shadow-amber-100 fixed top-[30%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50">
-              <span>Title:</span>
-              <textarea
-                placeholder="Enter title..."
-                className="border px-2 py-1 min-h-auto"
-                name="title"
-                onChange={changeHandler}
-                value={formValue.title}
-              />
-              <span>Description:</span>
-              <textarea
-                placeholder="Enter description..."
-                className="border px-2 py-1 min-h-auto"
-                name="description"
-                onChange={changeHandler}
-                value={formValue.description}
-              />
-
-              <button type="submit"
-                disabled={createTask.isPending}
-                className="flex bg-green-600 px-3 py-1 cursor-pointer disabled:bg-gray-400 self-end rounded-md">
-                Create
-              </button>
-              <button
-                className="text-white items-center flex justify-center absolute top-2.5 right-2.5 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
-                onClick={() => setVisibleCreateForm(false)}
-              >
-                x
-              </button>
-            </form>
+            <CreateForm
+              handleSubmit={handleSubmit}
+              changeHandler={changeHandler}
+              formValue={formValue}
+              setVisibleCreateForm={setVisibleCreateForm}
+              isPending={createTask.isPending}
+            />
           </div>
         }
         <div className="flex justify-center items-center flex-wrap shadow-sm shadow-amber-100 px-2 py-1 mb-3 gap-2 relative">
@@ -159,27 +134,10 @@ export default function Home() {
 
 
         {!data?.tasks?.length && !isFetching ?
-          <div className="flex justify-center items-center text-red-500 font-bold">No Tasks...</div>
+          <div className="flex justify-center items-center text-red-500 font-bold">Записей пока нет...</div>
           :
           <div className="flex flex-col border gap-3  bg-slate-800 w-full mx-2 relative z-10 shadow-sm shadow-amber-100">
-            <div className="flex flex-col  justify-center items-center">
-              <div className="flex flex-wrap  justify-center items-center gap-2 px-2 py-1">
-                {Object.entries(taskCounts || {}).map(([status, count]) => (
-                  <div key={status} className={status}>
-                    <span className="font-bold">{status}</span>: {count}
-                  </div>
-                ))}
-              </div>
-
-              {data?.totalCount && <strong
-                className="flex gap-2 justify-center items-center py-1">
-                Total count:
-                <span className="text-green-600">
-                  {data?.totalCount}
-                </span>
-              </strong>
-              }
-            </div>
+            <CountTasks data={data || null} />
 
             {data?.tasks?.map((task, idx) => (
               <TaskItem task={task} idx={idx} key={task.id} userId={userFromSession?.userId ?? ''} />

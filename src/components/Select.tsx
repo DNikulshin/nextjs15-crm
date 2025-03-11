@@ -6,12 +6,11 @@ import { Option } from './Option'
 
 
 export const dataTaskStatus = [
-    { value: 'new' },
-    { value: 'inWork' },
-    { value: 'waiting' },
-    { value: 'cancelled' },
-    { value: 'completed' },
- 
+    { value: 'new', translate: 'Новая' },
+    { value: 'inWork', translate: 'В работе' },
+    { value: 'waiting', translate: 'Ожидание' },
+    { value: 'cancelled', translate: 'Отменено' },
+    { value: 'completed', translate: 'Выполнено' },
 ]
 
 

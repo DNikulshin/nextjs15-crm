@@ -4,7 +4,9 @@ import { formatDate } from "../shared/utils/formatDate"
 import { useRemoveTask, useUpdateTask } from "../hooks/useTask"
 import { useState } from "react"
 import { CustomConfirm } from "./CustomConfirm"
-
+import { FaEdit } from "react-icons/fa";
+import { FaSave } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
 
 interface Props {
     idx: number
@@ -17,7 +19,7 @@ interface Props {
 export const TaskItem = ({ idx, task, userId }: Props) => {
 
     const [title, setTitle] = useState(task.title)
-    const [description, setDescription] = useState(task.description ?? 'not filled')
+    const [description, setDescription] = useState(task.description ?? '[не заполнено]')
     const [report, setReport] = useState(task.report ?? '')
     const [isConfirmVisible, setConfirmVisible] = useState(false);
     const [taskToDelete, setTaskToDelete] = useState('');
@@ -94,22 +96,22 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
 
     return (
         <div key={task.id} className="flex flex-col pb-2 pt-8 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-10">
-            <div className="flex gap-4">
-                <span>Title:</span>
+            <div className="flex  items-center gap-4 px-2">
+                <span>Заголовок:</span>
                 {(task.userId === userId) &&
                     <button className="text-sm"
                         onClick={() => setIsEditTitle(!isEditTitle)}
                     >
                         {isEditTitle
-                            ? <span className="bg-green-500/85  px-2 py-1 rounded-sm">
-                                Save
+                            ? <span className="bg-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
+                                <FaSave className="text-xl" />
                             </span>
-                            : <span className="bg-red-500/85  px-2 py-1 rounded-sm">
-                                Edit
+                            : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
+                                <FaEdit className="text-xl" />
                             </span>
                         }
                     </button>}
-                <span className="font-bold">{task?.user?.email}</span>
+                <span className="flex font-bold items-center gap-2 "><FaUserAlt /> {task?.user?.email}</span>
             </div>
 
             {isEditTitle && <textarea
@@ -121,17 +123,17 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
             />}
             <p className="shadow-md px-2 py-2">{title}</p>
 
-            <div className="flex gap-4">
-                <span>Description:</span>
+            <div className="flex gap-4 px-2">
+                <span>Описание:</span>
                 {(task.userId === userId) && <button className="text-sm"
                     onClick={() => setIsEditDescription(!isEditDescription)}
                 >
                     {isEditDescription
-                        ? <span className="bg-green-500/85  px-2 py-1 rounded-sm">
-                            Save
+                        ? <span className="bg-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
+                            <FaSave className="text-xl" />
                         </span>
-                        : <span className="bg-red-500/85  px-2 py-1 rounded-sm">
-                            Edit
+                        : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
+                            <FaEdit className="text-xl" />
                         </span>
                     }
                 </button>}
@@ -147,26 +149,26 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
             />}
             <p className="shadow-md px-2 py-2">{description}</p>
             <div className="flex gap-2 shadow-md px-2 pt-2 pb-4">
-                <span>Status:</span>
+                <span>Статус:</span>
                 <Select task={task} key={idx} />
             </div>
 
 
-            <div className="shadow-md px-2 py-2"><span>UpdatedAt:</span> {formatDate({ date: task.updatedAt })}</div>
+            <div className="shadow-md px-2 py-2"><span>Дата обновления:</span> {formatDate({ date: task.updatedAt })}</div>
 
             {(task.status !== 'new') &&
                 <div className="w-full flex flex-col py-2 justify-between  bg-slate-700/85 break-words gap-2">
-                    <div className="flex gap-2 flex-wrap">
-                        Report & Comment:
+                    <div className="flex gap-2 flex-wrap px-2">
+                        Отчет или комментарий:
                         <button className="text-sm"
                             onClick={() => setIsEditReport(!isEditREport)}
                         >
                             {isEditREport
-                                ? <span className="bg-green-500/85  px-2 py-1 rounded-sm">
-                                    Save
+                                ? <span className="bg-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
+                                    <FaSave className="text-xl" />
                                 </span>
-                                : <span className="bg-red-500/85  px-2 py-1 rounded-sm">
-                                    Edit
+                                : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
+                                    <FaEdit className="text-xl" />
                                 </span>
                             }
                         </button>

@@ -1,5 +1,4 @@
-export const Option = ({ item }: { item: { value: string } }) => {
-
+export const Option = ({ item }: { item: { value: string, translate: string } }) => {
 
     return (
         <option value={item.value}
@@ -7,7 +6,7 @@ export const Option = ({ item }: { item: { value: string } }) => {
 
             key={item.value}
         >
-            {item.value}
+            {item.translate}
         </option>
     )
 }

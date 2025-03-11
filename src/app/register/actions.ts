@@ -7,10 +7,10 @@ import { prismaClient } from "@/prismaClient"
 import { hash } from "bcrypt";
 
 const registerSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }).trim(),
+  email: z.string().email({ message: "Некорректный email" }).trim(),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" })
+    .min(8, { message: "Пароль должен быть не менее 8 символов" })
     .trim(),
 });
 
@@ -34,7 +34,7 @@ export async function register(prevState: unknown, formData: FormData) {
   if (existingUser) {
     return {
       errors: {
-        email: ["Email already in use"],
+        email: ["Пользователь с таким email уже существует"],
       },
     };
   }

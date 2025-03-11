@@ -14,28 +14,28 @@ export function RegisterForm() {
         <input
           id="email"
           name="email"
-          placeholder="Email"
+          placeholder="Введите email..."
           className="px-2 py-1 rounded-sm border border-white"
         />
       </div>
       {state?.errors?.email && (
-        <p className="text-red-500">{state.errors.email}</p>
+        <p className="text-red-500 break-words">{state.errors.email}</p>
       )}
 
       <div className="flex flex-col gap-2">
         <input
           id="password"
           name="password"
-          type="password"
+          type="Введите пароль..."
           placeholder="Password"
           className="px-2 py-1 rounded-sm border border-white"
         />
       </div>
       {state?.errors?.password && (
-        <p className="text-red-500">{state.errors.password}</p>
+        <p className="text-red-500 break-words">{state.errors.password}</p>
       )}
       <SubmitButton />
-      <p>Have Account ? <Link className="text-blue-600 underline" href="/login">Login</Link></p>
+      <p>Есть аккаунт ? <Link className="text-blue-600 underline" href="/login">Войти</Link></p>
     </form>
   );
 }
@@ -46,7 +46,7 @@ function SubmitButton() {
   return (
     <button className="bg-green-500 px-2 py-1 rounded-sm cursor-pointer  disabled:bg-gray-400"
       disabled={pending} type="submit">
-      {pending ? 'Pending...' : 'Register'}
+      {pending ? 'Подождите...' : 'Регистрация'}
     </button>
   );
 }

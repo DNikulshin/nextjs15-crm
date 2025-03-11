@@ -7,10 +7,10 @@ import { prismaClient } from "@/prismaClient"
 import { compare } from "bcrypt";
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }).trim(),
+  email: z.string().email({ message: "Некорректный email" }).trim(),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" })
+    .min(8, { message: "Пароль должен быть не менее 8 символов" })
     .trim(),
 });
 
@@ -33,7 +33,7 @@ export async function login(prevState: unknown, formData: FormData) {
   if (!user) {
     return {
       errors: {
-        email: ["Invalid email or password"],
+        email: ["Неверный email или пароль"],
       },
     };
   }
@@ -43,7 +43,7 @@ export async function login(prevState: unknown, formData: FormData) {
   if (!comparePassword) {
     return {
       errors: {
-        email: ["Invalid email or password"],
+        email: ["Неверный email или пароль"],
       },
     };
   }
