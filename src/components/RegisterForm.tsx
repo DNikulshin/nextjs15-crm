@@ -26,8 +26,8 @@ export function RegisterForm() {
         <input
           id="password"
           name="password"
-          type="Введите пароль..."
-          placeholder="Password"
+          type="password"
+          placeholder="Введите пароль..."
           className="px-2 py-1 rounded-sm border border-white"
         />
       </div>
