@@ -53,6 +53,7 @@ export const SelectStatus = (
                 : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center"
                     onClick={() => {
                         setIsEditTitle(true)
+                        setStatus('')
                         localStorage.setItem('selectedStatus', '');
                     }}
                 >
