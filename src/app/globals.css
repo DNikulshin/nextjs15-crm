@@ -34,6 +34,11 @@ body {
   font: bold;
 }
 
+.waiting {
+  color: darkolivegreen;
+  font: bold;
+}
+
 .cancelled {
   color: gray;
   font: bold;
@@ -44,11 +49,19 @@ body {
   font: bold;
 }
 
-.waiting {
-  color: darkolivegreen;
+.inArchive {
+  color: silver;
   font: bold;
-
 }
+
+
+.word-break {
+  word-break: break-word;
+}
+
+
+
+
 
 .loader {
   --d: 22px;

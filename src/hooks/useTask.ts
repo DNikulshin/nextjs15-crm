@@ -1,15 +1,8 @@
 import { Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { IFormDataCreateTask } from '../types/types'
+import { IDataTask, IFormDataCreateTask, ResponseDataTask } from '../types/types'
 
-
-interface ResponseData {
-    tasks: Task[],
-    user?: { id: string, email: string } 
-    totalCount: number
-}
-
-const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<ResponseData> => {
+const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<ResponseDataTask> => {
     try {
 
         const params = new URLSearchParams({
@@ -21,7 +14,7 @@ const fetcTasks = async ({ status, startDate, endDate }: { status?: string, star
         const response = await fetch(`/api/tasks?${params.toString()}`);
 
 
-        return await response.json() as ResponseData
+        return await response.json() as ResponseDataTask
 
     } catch (error) {
 
@@ -60,7 +53,7 @@ const remove = async (id: string, signal: AbortSignal): Promise<{ id: string }> 
     }
 }
 
-const update = async (task: Task, signal: AbortSignal): Promise<{ id: string }> => {
+const update = async (task: IDataTask, signal: AbortSignal): Promise<Task> => {
     try {
         const response = await fetch('/api/tasks', {
             method: "PATCH",
@@ -105,7 +98,7 @@ const useTasks = ({ status, startDate, endDate }: { status?: string, startDate?:
 const useUpdateTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: async (task: Task) => {
+        mutationFn: async (task: IDataTask) => {
             const controller = new AbortController()
             const signal = controller.signal
             const mutation = update(task, signal)

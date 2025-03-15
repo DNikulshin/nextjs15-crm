@@ -1,20 +1,22 @@
 import { useState } from "react"
-import { useUpdateTask } from "../hooks/useTask"
-import { Task, TaskStatus } from "@prisma/client"
+import { useUpdateTask } from "../../hooks/useTask"
+import { TaskStatus } from "@prisma/client"
 import { Option } from './Option'
+import { IDataTask } from "@/types/types"
 
 
 
 export const dataTaskStatus = [
     { value: 'new', translate: 'Новая' },
     { value: 'inWork', translate: 'В работе' },
-    { value: 'waiting', translate: 'Ожидание' },
+    { value: 'waiting', translate: 'В ожидании' },
     { value: 'cancelled', translate: 'Отменено' },
     { value: 'completed', translate: 'Выполнено' },
+    { value: 'inArchive', translate: 'В архиве' },
 ]
 
 
-export const Select = ({ task }: { task: Task }) => {
+export const Select = ({ task }: { task: IDataTask }) => {
 
     const [taskStatus, setTaskStatus] = useState(task.status)
 

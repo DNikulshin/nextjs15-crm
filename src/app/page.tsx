@@ -4,13 +4,15 @@ import { ChangeEventHandler, FormEventHandler, useEffect, useState } from "react
 import { useCreateNewTask, useTasks } from "../hooks/useTask";
 import { useUser } from "@/hooks/useUser";
 import { IFormDataCreateTask } from "../types/types";
-import { TaskItem } from "../components/Task";
-import { SelectStatus } from "../components/SelectStatus";
+import { TaskList } from "../components/task/TaskList";
+import { SelectStatus } from "../components/task/SelectStatus";
 import { logout } from "./login/actions";
-import { FilterByDate } from "@/components/FilterByDate";
+import { FilterByDate } from "@/components/task/FilterByDate";
 import { Header } from "@/components/Header";
-import { CreateForm } from "@/components/CreateForm";
-import { CountTasks } from "@/components/CountTasks";
+import { CreateForm } from "@/components/task/CreateForm";
+import { Modal } from "@/shared/ui/Modal";
+import { Loader } from "@/shared/ui/Loader";
+
 
 
 export default function Home() {
@@ -100,7 +102,7 @@ export default function Home() {
       />
       <main className="flex flex-col justify-center items-center mx-auto pb-3 container px-2">
         {visibleCreateForm &&
-          <div className="fixed inset-0 bg-slate-800/90 bg-opacity-50 z-40 px-2 -mx-2" onClick={() => setVisibleCreateForm(false)}>
+          <Modal isVisible={setVisibleCreateForm}>
             <CreateForm
               handleSubmit={handleSubmit}
               changeHandler={changeHandler}
@@ -108,14 +110,13 @@ export default function Home() {
               setVisibleCreateForm={setVisibleCreateForm}
               isPending={createTask.isPending}
             />
-          </div>
+          </Modal>
         }
         <div className="flex justify-center items-center flex-wrap shadow-sm shadow-amber-100 px-2 py-1 mb-3 gap-2 relative">
           {
 
             isFetching &&
-            <div className="w-full flex justify-center items-center font-bold text-center  absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] loader">
-            </div>
+            <Loader />
           }
           <FilterByDate
             startDate={startDate}
@@ -132,22 +133,13 @@ export default function Home() {
           />
         </div>
 
-
         {!data?.tasks?.length && !isFetching ?
           <div className="flex justify-center items-center text-red-500 font-bold">Записей пока нет...</div>
           :
-          <div className="flex flex-col border gap-3  bg-slate-800 w-full mx-2 relative z-10 shadow-sm shadow-amber-100">
-            <CountTasks data={data || null} />
-
-            {data?.tasks?.map((task, idx) => (
-              <TaskItem task={task} idx={idx} key={task.id} userId={userFromSession?.userId ?? ''} />
-            ))}
-          </div>
-        }
-        {isFetching &&
-          <div className="absolute top-[50%] right-[50%] text-center font-bold loader"
-          >
-          </div>
+          <TaskList
+            data={data}
+            userFromSessionId={userFromSession?.userId}
+          />
         }
       </main>
     </div>

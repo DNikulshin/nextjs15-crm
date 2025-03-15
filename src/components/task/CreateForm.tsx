@@ -25,9 +25,9 @@ export const CreateForm = ({
       onSubmit={handleSubmit}
       onClick={e => e.stopPropagation()}
       className="w-full flex gap-3 flex-col px-4 pt-8 pb-4 md:w-1/2 bg-gray-900 shadow-sm shadow-amber-100 fixed top-[30%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50">
-      <span>Заголовок:</span>
+      <span>Тема:</span>
       <textarea
-        placeholder="Введите текст заголовка..."
+        placeholder="Введите текст темы..."
         className="border px-2 py-1 min-h-auto"
         name="title"
         spellCheck

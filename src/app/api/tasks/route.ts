@@ -1,6 +1,6 @@
-import { Task, TaskStatus, User } from "@prisma/client";
+import { TaskStatus } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/prismaClient";
-import { IFormDataCreateTask } from "../../../types/types";
+import { IDataTask, IFormDataCreateTask } from "../../../types/types";
 import { getDateTimeInTimeZone } from "@/shared/utils/getDateTimeInTimeZone ";
 
 //const timeZone = 'Europe/Moscow';
@@ -16,43 +16,28 @@ export async function GET(req: Request) {
 
         if (status) {
             whereClause.status = status;
+
         }
 
-        if (startDate && !endDate) {
+        if (startDate) {
             const startOfDay = new Date(startDate);
-            const endOfDay = new Date(startDate);
-
             startOfDay.setHours(0, 0, 0, 0);
 
-            endOfDay.setHours(23, 59, 59, 999);
+            let endOfDay;
 
-            const formatStartDate = getDateTimeInTimeZone(startOfDay, 'Europe/Moscow')
+            if (endDate) {
+                endOfDay = new Date(endDate);
+            } else {
+                endOfDay = new Date(startDate);
+            }
 
-            const formatEndDate = getDateTimeInTimeZone(endOfDay, 'Europe/Moscow')
+            endOfDay.setHours(23, 59, 59, 999)
 
-            whereClause.updatedAt = {
-                gte: new Date(formatStartDate)
-                ,
-                lte: new Date(formatEndDate)
-            };
-        }
-
-        if (startDate && endDate) {
-
-            const startOfDay = new Date(startDate);
-            const endOfDay = new Date(endDate);
-
-            startOfDay.setHours(0, 0, 0, 0);
-
-            endOfDay.setHours(23, 59, 59, 999);
-
-            const formatStartDate = getDateTimeInTimeZone(startOfDay, 'Europe/Moscow')
-
-            const formatEndDate = getDateTimeInTimeZone(endOfDay, 'Europe/Moscow')
+            const formatStartDate = getDateTimeInTimeZone(startOfDay, 'Europe/Moscow');
+            const formatEndDate = getDateTimeInTimeZone(endOfDay, 'Europe/Moscow');
 
             whereClause.updatedAt = {
-                gte: new Date(formatStartDate)
-                ,
+                gte: new Date(formatStartDate),
                 lte: new Date(formatEndDate)
             };
         }
@@ -67,7 +52,27 @@ export async function GET(req: Request) {
                         id: true,
                         email: true
                     }
+                },
+                comments: {
+                    select: {
+                        id: true,
+                        content: true,
+                        updatedAt: true,
+                        userId: true,
+                        taskId: true,
+                        user: {
+                            select: {
+                                id: true,
+                                email: true
+                            }
+                        }
+                    },
+                    orderBy: [
+                        { updatedAt: 'desc' }
+                    ]
+
                 }
+
             },
             orderBy: [
                 { status: 'asc' },
@@ -123,15 +128,20 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
     try {
 
-        const updateTask: Task & { user?: User } = await req.json()
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { user, ...taskData } = updateTask;
+        const updateTask: IDataTask = await req.json()
+
 
         const task = await prismaClient.task.update({
             where: {
                 id: updateTask.id
             },
-            data: { ...taskData }
+            data: {
+                title: updateTask.title,
+                description: updateTask.description,
+                report: updateTask.report,
+                status: updateTask.status,
+                updatedAt: updateTask.updatedAt
+            }
         })
 
         return new Response(JSON.stringify(task), {
@@ -153,7 +163,7 @@ export async function PATCH(req: Request) {
 export async function DELETE(req: Request) {
     try {
 
-        const taskId: string = await req.json()
+        const taskId = await req.json()
 
         const deleteTask = await prismaClient.task.delete({
             where: {

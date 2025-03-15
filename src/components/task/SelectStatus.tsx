@@ -5,10 +5,10 @@ export const dataTSelectStatus = [
     { value: 'All', translate: 'Все' },
     { value: 'new', translate: 'Новая' },
     { value: 'inWork', translate: 'В работе' },
-    { value: 'waiting', translate: 'Ожидание' },
+    { value: 'waiting', translate: 'В ожидании' },
     { value: 'cancelled', translate: 'Отменено' },
     { value: 'completed', translate: 'Выполнено' },
-
+    { value: 'inArchive', translate: 'В архиве' },
 ]
 
 export const SelectStatus = (
@@ -32,7 +32,7 @@ export const SelectStatus = (
                 {dataTSelectStatus.map(item => {
                     if (item.value === 'All') {
 
-                        return <option value='' className={item.value} key={item.value}>{item.translate}</option>
+                        return <option value='' className="text-white" key={item.value}>{item.translate}</option>
                     }
 
                     return (

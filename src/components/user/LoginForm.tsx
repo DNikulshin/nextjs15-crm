@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { login } from "../app/login/actions";
+import { login } from "../../app/login/actions";
 import Link from "next/link";
 
 export function LoginForm() {
