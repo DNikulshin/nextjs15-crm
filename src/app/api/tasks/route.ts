@@ -16,43 +16,28 @@ export async function GET(req: Request) {
 
         if (status) {
             whereClause.status = status;
+
         }
 
-        if (startDate && !endDate) {
+        if (startDate) {
             const startOfDay = new Date(startDate);
-            const endOfDay = new Date(startDate);
-
             startOfDay.setHours(0, 0, 0, 0);
 
-            endOfDay.setHours(23, 59, 59, 999);
+            let endOfDay;
 
-            const formatStartDate = getDateTimeInTimeZone(startOfDay, 'Europe/Moscow')
+            if (endDate) {
+                endOfDay = new Date(endDate);
+            } else {
+                endOfDay = new Date(startDate);
+            }
 
-            const formatEndDate = getDateTimeInTimeZone(endOfDay, 'Europe/Moscow')
+            endOfDay.setHours(23, 59, 59, 999)
 
-            whereClause.updatedAt = {
-                gte: new Date(formatStartDate)
-                ,
-                lte: new Date(formatEndDate)
-            };
-        }
-
-        if (startDate && endDate) {
-
-            const startOfDay = new Date(startDate);
-            const endOfDay = new Date(endDate);
-
-            startOfDay.setHours(0, 0, 0, 0);
-
-            endOfDay.setHours(23, 59, 59, 999);
-
-            const formatStartDate = getDateTimeInTimeZone(startOfDay, 'Europe/Moscow')
-
-            const formatEndDate = getDateTimeInTimeZone(endOfDay, 'Europe/Moscow')
+            const formatStartDate = getDateTimeInTimeZone(startOfDay, 'Europe/Moscow');
+            const formatEndDate = getDateTimeInTimeZone(endOfDay, 'Europe/Moscow');
 
             whereClause.updatedAt = {
-                gte: new Date(formatStartDate)
-                ,
+                gte: new Date(formatStartDate),
                 lte: new Date(formatEndDate)
             };
         }
@@ -81,7 +66,11 @@ export async function GET(req: Request) {
                                 email: true
                             }
                         }
-                    }
+                    },
+                    orderBy: [
+                        { updatedAt: 'desc' }
+                    ]
+
                 }
 
             },
@@ -147,7 +136,7 @@ export async function PATCH(req: Request) {
                 id: updateTask.id
             },
             data: {
-                title: updateTask.status,
+                title: updateTask.title,
                 description: updateTask.description,
                 report: updateTask.report,
                 status: updateTask.status,

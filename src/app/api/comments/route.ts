@@ -5,9 +5,14 @@ import { prismaClient } from "../../../../prisma/prismaClient";
 export async function GET(req: Request) {
     try {
 
+        const url = new URL(req.url);
+        const taskId = url.searchParams.get('taskId') ?? undefined
+        const userId = url.searchParams.get('userId') ?? undefined
+
         const totalCommentCount = await prismaClient.comment.count();
 
         const comments = await prismaClient.comment.findMany({
+            where: { taskId, userId },
             include: {
                 user: {
                     select: {
@@ -18,7 +23,7 @@ export async function GET(req: Request) {
                 task: true
             },
             orderBy: [
-                { updatedAt: 'asc' }
+                { updatedAt: 'desc' }
             ],
 
         });
@@ -40,8 +45,15 @@ export async function POST(req: Request) {
     try {
         const newComment: IFormDataCreateComment = await req.json()
 
+        console.log(newComment.updatedAt)
+
         const comment = await prismaClient.comment.create({
-            data: { ...newComment },
+            data: {
+                content: newComment.content,
+                updatedAt: newComment.updatedAt,
+                taskId: newComment.taskId,
+                userId: newComment.userId
+            },
             select: {
                 id: true,
                 content: true,
@@ -97,5 +109,34 @@ export async function PATCH(req: Request) {
 
     }
 }
+
+export async function DELETE(req: Request) {
+    try {
+
+        const taskId = await req.json()
+
+        const deleteComment = await prismaClient.comment.delete({
+            where: {
+                id: taskId
+            }
+        })
+
+        return new Response(JSON.stringify(deleteComment), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+        })
+
+
+    } catch (error) {
+
+        throw new Response(JSON.stringify(error), {
+            status: 500,
+            headers: { "Content-Type": "application/json" }
+        })
+
+    }
+}
+
+
 
 

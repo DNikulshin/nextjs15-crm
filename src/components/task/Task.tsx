@@ -1,8 +1,7 @@
-import { Task } from "@prisma/client"
 import { Select } from "./Select"
-import { Comments } from "./Comments"
-import { formatDate } from "../shared/utils/formatDate"
-import { useRemoveTask, useUpdateTask } from "../hooks/useTask"
+import { CommentList } from "../comment/CommentList"
+import { formatDate } from "../../shared/utils/formatDate"
+import { useRemoveTask, useUpdateTask } from "../../hooks/useTask"
 import { useState } from "react"
 import { CustomConfirm } from "./CustomConfirm"
 import { FaEdit } from "react-icons/fa";
@@ -10,23 +9,13 @@ import { FaSave } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
 import { TiMessages } from "react-icons/ti"
 import { MdUpdate } from "react-icons/md";
+import { IDataTask } from "@/types/types"
+import { Loader } from "@/shared/ui/Loader"
 
 interface Props {
     idx: number
     userId: string,
-    task: Task & {
-        user?: { id: string, email: string }
-    } & {
-        comments?: {
-            id: string
-            content: string
-            updatedAt: Date
-            user: {
-                id: string,
-                email: string
-            }
-        }[]
-    }
+    task: IDataTask
 }
 
 export const TaskItem = ({ idx, task, userId }: Props) => {
@@ -39,6 +28,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
     const [isEditTitle, setIsEditTitle] = useState(false)
     const [isEditDescription, setIsEditDescription] = useState(false)
     const [isEditREport, setIsEditReport] = useState(false)
+    const [isVisibleCommets, setisVisibleComments] = useState(false)
 
     const deleteTask = useRemoveTask()
     const updateTaskById = useUpdateTask()
@@ -105,67 +95,80 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
     };
 
     if (deleteTask.isPending) {
-        return <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50 loader"></div>
+        return <Loader />
     }
 
     return (
-        <div key={task.id} className="flex flex-col pb-2 pt-8 px-4 justify-between bg-slate-700/85 break-words gap-3 relative z-10">
-            <div className="flex  items-center gap-4 px-2">
-                <span>Заголовок:</span>
-                {(task.userId === userId) &&
-                    <button className="text-sm"
-                        onClick={() => setIsEditTitle(!isEditTitle)}
+        <div key={task.id} className="flex flex-col pb-2 pt-8 px-4 justify-between bg-slate-700/85 gap-3 relative z-10">
+            <span className="px-2">#{task?.number}</span>
+            <span className="flex font-bold items-center gap-2 px-2">
+                <span className="text-lg"><FaUserAlt /></span>
+                <span className="text-ellipsis overflow-hidden">
+                    {task?.user?.email}
+                </span>
+            </span>
+            <div className="flex flex-wrap">
+                <div className="flex items-center gap-4 px-2">
+                    <span>Тема:</span>
+                    {(task.userId === userId) &&
+                        <button className="text-sm"
+                            onClick={() => setIsEditTitle(!isEditTitle)}
+                        >
+                            {isEditTitle
+                                ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center  shadow-sm">
+                                    <FaSave className="text-xl" />
+                                </span>
+                                : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center ">
+                                    <FaEdit className="text-xl" />
+                                </span>
+                            }
+                        </button>}
+
+                </div>
+
+                {isEditTitle &&
+                    <textarea
+                        className="border px-2 py-1  min-h-fit w-full"
+                        onChange={(e) => setTitle(e.target.value)}
+                        spellCheck
+                        value={title}
+                        onBlur={onBlurTitleHandler}
+
+                    />}
+                <p className="shadow-md px-2 py-2 word-break">{title}</p>
+            </div>
+
+
+            <div className="flex flex-wrap">
+                <div className="flex gap-4 px-2 items-center">
+                    <span>Описание:</span>
+                    {(task.userId === userId) && <button className="text-sm"
+                        onClick={() => setIsEditDescription(!isEditDescription)}
                     >
-                        {isEditTitle
-                            ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
+                        {isEditDescription
+                            ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center  shadow-sm">
                                 <FaSave className="text-xl" />
                             </span>
-                            : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
+                            : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center  shadow-sm">
                                 <FaEdit className="text-xl" />
                             </span>
                         }
                     </button>}
-                <span className="flex font-bold items-center gap-2 "><FaUserAlt /> {task?.user?.email}</span>
+
+                </div>
+                {isEditDescription &&
+                    <textarea
+                        className="border px-2 py-1 min-h-fit w-full"
+                        onChange={(e) => setDescription(e.target.value)}
+                        spellCheck
+                        value={description ?? 'not filled'}
+
+                        onBlur={onBlurDescriptionHandler}
+
+                    />}
+                <p className="shadow-md px-2 py-2 word-break">{description}</p>
             </div>
 
-            {isEditTitle &&
-                <textarea
-                    className="border px-2 py-1  min-h-fit"
-                    onChange={(e) => setTitle(e.target.value)}
-                    spellCheck
-                    value={title}
-                    onBlur={onBlurTitleHandler}
-
-                />}
-            <p className="shadow-md px-2 py-2 word-break">{title}</p>
-
-            <div className="flex gap-4 px-2">
-                <span>Описание:</span>
-                {(task.userId === userId) && <button className="text-sm"
-                    onClick={() => setIsEditDescription(!isEditDescription)}
-                >
-                    {isEditDescription
-                        ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
-                            <FaSave className="text-xl" />
-                        </span>
-                        : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
-                            <FaEdit className="text-xl" />
-                        </span>
-                    }
-                </button>}
-
-            </div>
-            {isEditDescription &&
-                <textarea
-                    className="border px-2 py-1 min-h-fit"
-                    onChange={(e) => setDescription(e.target.value)}
-                    spellCheck
-                    value={description ?? 'not filled'}
-
-                    onBlur={onBlurDescriptionHandler}
-
-                />}
-            <p className="shadow-md px-2 py-2 word-break">{description}</p>
             <div className="flex gap-2 shadow-md px-2 pt-2 pb-4">
                 <span>Статус:</span>
                 <Select task={task} key={idx} />
@@ -178,21 +181,21 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                     {formatDate({ date: task.updatedAt })}
                 </div>
 
-                <span className='flex text-2xl cursor-pointer hover:text-red-500/85'><TiMessages /></span>
+
             </div>
 
             {(task.status !== 'new') &&
-                <div className="w-full flex flex-col py-2 justify-between bg-slate-700/85 gap-2">
+                <div className="flex flex-wrap">
                     <div className="flex gap-2 flex-wrap px-2 items-center">
                         Отчет:
                         <button className="text-sm"
                             onClick={() => setIsEditReport(!isEditREport)}
                         >
                             {isEditREport
-                                ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
+                                ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center  shadow-sm">
                                     <FaSave className="text-xl" />
                                 </span>
-                                : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
+                                : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center  shadow-sm">
                                     <FaEdit className="text-xl" />
                                 </span>
                             }
@@ -200,7 +203,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                     </div>
                     {isEditREport &&
                         <textarea
-                            className="border px-2 py-1 min-h-fit"
+                            className={`border px-2 py-1 min-h-fit w-full ${!report && 'border-red-500'}`}
                             onChange={(e) => setReport(e.target.value)}
                             spellCheck
                             value={report}
@@ -211,9 +214,25 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                 </div>
             }
 
-            <Comments
+            <button className='flex gap-2 text-2xl cursor-pointer hover:text-red-500/85 self-end shadow-sm'
+                onClick={() => {
+                    setisVisibleComments(!isVisibleCommets)
+                }
+                }
+            >
+                <span className="text-sm text-red-500/85 font-bold">
+                    {(task?.comments && task?.comments?.length > 0)
+                        && task?.comments?.length}
+                </span>
+                <TiMessages />
+
+            </button>
+
+            <CommentList
                 comments={task.comments}
                 userId={userId}
+                taskId={task.id}
+                isVisibleCommets={isVisibleCommets}
             />
 
             {(task.userId === userId) && <button
@@ -228,7 +247,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
 
                     onClick={handleCancel}>
                     <CustomConfirm
-                        message="Вы уверены, что хотите удалить эту задачу?"
+                        message="Хотите удалить заявку?"
                         onConfirm={handleConfirm}
                         onCancel={handleCancel}
                     />

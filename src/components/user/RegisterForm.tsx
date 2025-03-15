@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { register } from "../app/register/actions";
+import { register } from "../../app/register/actions";
 import Link from "next/link";
 
 export function RegisterForm() {

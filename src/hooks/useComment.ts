@@ -2,9 +2,16 @@ import { IDataComment, IFormDataCreateComment } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
-const fetchComments = async (): Promise<Comment[]> => {
+const fetchComments = async ({ taskId = '', userId = '' }: { taskId?: string, userId?: string }): Promise<Comment[]> => {
+
+    const params = new URLSearchParams({
+        ...(taskId ? { taskId } : {}),
+        ...(userId ? { userId } : {}),
+
+    });
+
     try {
-        const response = await fetch(`/api/comments`);
+        const response = await fetch(`/api/comments?${params.toString()}`);
 
         return await response.json() as Comment[]
 
@@ -43,11 +50,26 @@ const update = async (comment: IDataComment, signal: AbortSignal): Promise<Comme
     }
 }
 
-const useComments = () => {
+const remove = async (id: string, signal: AbortSignal): Promise<{ id: string }> => {
+    try {
+        const response = await fetch('/api/comments', {
+            method: "DELETE",
+            body: JSON.stringify(id),
+            signal
+        })
+
+        return await response.json()
+
+    } catch (error) {
+        throw error
+    }
+}
+
+const useComments = ({ taskId, userId }: { taskId?: string, userId?: string }) => {
 
     return useQuery({
         queryKey: ['comments'],
-        queryFn: () => fetchComments()
+        queryFn: () => fetchComments({ taskId, userId })
     })
 }
 
@@ -65,7 +87,10 @@ const useCreateNewComment = () => {
             }
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['comments'] })
+            queryClient.invalidateQueries({ queryKey: ['comments'] });
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+
+
         }
     })
 }
@@ -86,8 +111,29 @@ const useUpdateComment = () => {
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['comments'] })
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
         }
     })
 }
 
-export { useComments, useCreateNewComment, useUpdateComment }
+const useRemoveComment = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const controller = new AbortController()
+            const signal = controller.signal
+            const mutation = remove(id, signal)
+            try {
+                return await mutation;
+            } finally {
+                return controller.abort();
+            }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['comments'] })
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+        }
+    })
+}
+
+export { useComments, useCreateNewComment, useUpdateComment, useRemoveComment }

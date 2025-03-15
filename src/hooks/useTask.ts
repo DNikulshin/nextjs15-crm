@@ -1,16 +1,8 @@
-import { Comment, Task } from '@prisma/client'
+import { Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { IDataTask, IFormDataCreateTask } from '../types/types'
+import { IDataTask, IFormDataCreateTask, ResponseDataTask } from '../types/types'
 
-
-interface ResponseData {
-    tasks: Task[],
-    user?: { id: string, email: string }
-    totalCount: number,
-    comments?: Comment[]
-}
-
-const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<ResponseData> => {
+const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<ResponseDataTask> => {
     try {
 
         const params = new URLSearchParams({
@@ -22,7 +14,7 @@ const fetcTasks = async ({ status, startDate, endDate }: { status?: string, star
         const response = await fetch(`/api/tasks?${params.toString()}`);
 
 
-        return await response.json() as ResponseData
+        return await response.json() as ResponseDataTask
 
     } catch (error) {
 
@@ -106,7 +98,7 @@ const useTasks = ({ status, startDate, endDate }: { status?: string, startDate?:
 const useUpdateTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: async (task: Task) => {
+        mutationFn: async (task: IDataTask) => {
             const controller = new AbortController()
             const signal = controller.signal
             const mutation = update(task, signal)
