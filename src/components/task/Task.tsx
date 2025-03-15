@@ -101,24 +101,24 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
     return (
         <div key={task.id} className="flex flex-col pb-2 pt-8 px-4 justify-between bg-slate-700/85 gap-3 relative z-10">
             <span className="px-2">#{task?.number}</span>
-            <span className="flex font-bold items-center gap-2 px-2">
+            <span className="flex font-bold items-center gap-2 px-2 py-2 shadow-md">
                 <span className="text-lg"><FaUserAlt /></span>
                 <span className="text-ellipsis overflow-hidden">
                     {task?.user?.email}
                 </span>
             </span>
-            <div className="flex flex-wrap">
-                <div className="flex items-center gap-4 px-2">
+            <div className="flex flex-wrap  shadow-md px-2 py-1">
+                <div className="flex items-center gap-4">
                     <span>Тема:</span>
                     {(task.userId === userId) &&
                         <button className="text-sm"
                             onClick={() => setIsEditTitle(!isEditTitle)}
                         >
                             {isEditTitle
-                                ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center  shadow-sm">
+                                ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
                                     <FaSave className="text-xl" />
                                 </span>
-                                : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center ">
+                                : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
                                     <FaEdit className="text-xl" />
                                 </span>
                             }
@@ -135,12 +135,12 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                         onBlur={onBlurTitleHandler}
 
                     />}
-                <p className="shadow-md px-2 py-2 word-break">{title}</p>
+                <p className="px-2 py-2 word-break">{title}</p>
             </div>
 
 
-            <div className="flex flex-wrap">
-                <div className="flex gap-4 px-2 items-center">
+            <div className="flex flex-wrap shadow-md  px-2 py-1">
+                <div className="flex gap-4 items-center">
                     <span>Описание:</span>
                     {(task.userId === userId) && <button className="text-sm"
                         onClick={() => setIsEditDescription(!isEditDescription)}
@@ -166,7 +166,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                         onBlur={onBlurDescriptionHandler}
 
                     />}
-                <p className="shadow-md px-2 py-2 word-break">{description}</p>
+                <p className="px-2 py-2 word-break">{description}</p>
             </div>
 
             <div className="flex gap-2 shadow-md px-2 pt-2 pb-4">
@@ -185,8 +185,8 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
             </div>
 
             {(task.status !== 'new') &&
-                <div className="flex flex-wrap">
-                    <div className="flex gap-2 flex-wrap px-2 items-center">
+                <div className="flex flex-wrap shadow-md px-2 py-1">
+                    <div className="flex gap-2 flex-wrap items-center">
                         Отчет:
                         <button className="text-sm"
                             onClick={() => setIsEditReport(!isEditREport)}
@@ -210,7 +210,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                             onBlur={onBlurReportHandler}
                         />}
 
-                    <p className="shadow-md px-2 py-2 word-break">{report}</p>
+                    <p className="px-2 py-2 word-break">{report}</p>
                 </div>
             }
 
