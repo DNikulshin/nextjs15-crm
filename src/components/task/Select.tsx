@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useUpdateTask } from "../../hooks/useTask"
-import { Task, TaskStatus } from "@prisma/client"
+import { TaskStatus } from "@prisma/client"
 import { Option } from './Option'
 import { IDataTask } from "@/types/types"
 
