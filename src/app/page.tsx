@@ -12,9 +12,6 @@ import { Header } from "@/components/Header";
 import { CreateForm } from "@/components/task/CreateForm";
 import { Modal } from "@/shared/ui/Modal";
 import { Loader } from "@/shared/ui/Loader";
-import { formatDateForInputDate } from "@/shared/utils/formatDateForInpytDate";
-
-
 
 export default function Home() {
   const { data: userFromSession, isFetching: isFetchingUserId } = useUser()
@@ -23,8 +20,8 @@ export default function Home() {
     { title: '', description: '' });
 
   const [status, setStatus] = useState('')
-  const [startDate, setStartDate] = useState(formatDateForInputDate({ date: new Date() }))
-  const [endDate, setEndDate] = useState(formatDateForInputDate({ date: new Date() }));
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('');
   const [isSingleDate, setIsSingleDate] = useState(false);
   const [isLogout, setIsLogout] = useState(false)
 
