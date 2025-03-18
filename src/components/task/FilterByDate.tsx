@@ -27,6 +27,7 @@ export const FilterByDate = (
                     checked={isSingleDate}
                     onChange={() => {
                         setIsSingleDate(true)
+                        setEndDate('')
                     }}
                 />
                 День
