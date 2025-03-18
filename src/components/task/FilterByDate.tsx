@@ -27,7 +27,6 @@ export const FilterByDate = (
                     checked={isSingleDate}
                     onChange={() => {
                         setIsSingleDate(true)
-                        setEndDate('')
                     }}
                 />
                 День
@@ -47,7 +46,7 @@ export const FilterByDate = (
             {isSingleDate ? (
                 <div className="flex gap-2 bg-slate-400 items-center justify-center rounded-sm text-center">
                     <input
-                        className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1  flex items-center justify-center"
+                        className="bg-slate-400 rounded-sm text-white text-sm px-4 py-2  flex items-center justify-center"
                         type="date"
 
                         onChange={e => {
@@ -61,7 +60,7 @@ export const FilterByDate = (
                 <div className="flex gap-2 items-start justify-center rounded-sm flex-wrap">
                     <div>
                         <input
-                            className="bg-slate-400 rounded-sm text-white text-sm px-2 py-1 flex items-center justify-center"
+                            className="bg-slate-400 rounded-sm text-white text-sm px-4 py-2 flex items-center justify-center"
                             type="date"
                             onChange={e => setStartDate(e.target.value)}
                             value={startDate}
@@ -69,7 +68,7 @@ export const FilterByDate = (
                     </div>
                     <div>
                         <input
-                            className="bg-slate-400 rounded-sm  text-white text-sm px-2 py-1 flex items-center justify-center"
+                            className="bg-slate-400 rounded-sm  text-white text-sm px-4 py-2 flex items-center justify-center"
                             type="date"
                             onChange={e => setEndDate(e.target.value)}
                             value={endDate}

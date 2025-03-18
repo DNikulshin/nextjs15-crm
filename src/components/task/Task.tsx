@@ -116,10 +116,10 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                         >
                             {isEditTitle
                                 ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center">
-                                    <FaSave className="text-xl" />
+                                    <FaSave className="text-2xl" />
                                 </span>
                                 : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center">
-                                    <FaEdit className="text-xl" />
+                                    <FaEdit className="text-2xl" />
                                 </span>
                             }
                         </button>}
@@ -147,10 +147,10 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                     >
                         {isEditDescription
                             ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center  shadow-sm">
-                                <FaSave className="text-xl" />
+                                <FaSave className="text-2xl" />
                             </span>
                             : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center  shadow-sm">
-                                <FaEdit className="text-xl" />
+                                <FaEdit className="text-2xl" />
                             </span>
                         }
                     </button>}
@@ -169,7 +169,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                 <p className="px-2 py-2 word-break">{description}</p>
             </div>
 
-            <div className="flex gap-2 shadow-md px-2 pt-2 pb-4">
+            <div className="flex gap-2 shadow-md px-2 pt-2 pb-4 items-center">
                 <span>Статус:</span>
                 <Select task={task} key={idx} />
             </div>
@@ -193,10 +193,10 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                         >
                             {isEditREport
                                 ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center  shadow-sm">
-                                    <FaSave className="text-xl" />
+                                    <FaSave className="text-2xl" />
                                 </span>
                                 : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center  shadow-sm">
-                                    <FaEdit className="text-xl" />
+                                    <FaEdit className="text-2xl" />
                                 </span>
                             }
                         </button>
@@ -214,7 +214,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
                 </div>
             }
 
-            <button className='flex gap-2 text-2xl cursor-pointer hover:text-red-500/85 self-end shadow-sm'
+            <button className='flex gap-2 text-3xl cursor-pointer hover:text-red-500/85 self-end shadow-sm  pb-2'
                 onClick={() => {
                     setisVisibleComments(!isVisibleCommets)
                 }
@@ -236,7 +236,7 @@ export const TaskItem = ({ idx, task, userId }: Props) => {
             />
 
             {(task.userId === userId) && <button
-                className="text-white items-center flex justify-center absolute right-2 top-2 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
+                className="text-white items-center flex justify-center text-xl absolute right-2 top-2 bg-red-500 px-3 py-1  disabled:bg-gray-400 cursor-pointer"
                 onClick={() => handleDeleteClick(task.id)}
                 disabled={deleteTask.isPending && updateTaskById.isPending}
             >

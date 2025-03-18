@@ -46,11 +46,11 @@ export const CreateForm = ({
 
       <button type="submit"
         disabled={isPending}
-        className="flex bg-green-600 px-3 py-1 cursor-pointer disabled:bg-gray-400 self-end rounded-md">
+        className="flex bg-green-600 px-4 py-2 cursor-pointer disabled:bg-gray-400 self-end rounded-md">
         Создать
       </button>
       <button
-        className="text-white items-center flex justify-center absolute top-2.5 right-2.5 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
+        className="text-white items-center flex justify-center absolute top-2.5 right-2.5 bg-red-500 px-3 py-1 text-xl  disabled:bg-gray-400 cursor-pointer"
         onClick={() => setVisibleCreateForm(false)}
       >
         x

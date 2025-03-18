@@ -12,6 +12,7 @@ import { Header } from "@/components/Header";
 import { CreateForm } from "@/components/task/CreateForm";
 import { Modal } from "@/shared/ui/Modal";
 import { Loader } from "@/shared/ui/Loader";
+import { formatDateForInputDate } from "@/shared/utils/formatDateForInpytDate";
 
 
 
@@ -22,8 +23,8 @@ export default function Home() {
     { title: '', description: '' });
 
   const [status, setStatus] = useState('')
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(formatDateForInputDate({ date: new Date() }))
+  const [endDate, setEndDate] = useState(formatDateForInputDate({ date: new Date() }));
   const [isSingleDate, setIsSingleDate] = useState(false);
   const [isLogout, setIsLogout] = useState(false)
 
@@ -134,7 +135,7 @@ export default function Home() {
         </div>
 
         {!data?.tasks?.length && !isFetching ?
-          <div className="flex justify-center items-center text-red-500 font-bold">Записей пока нет...</div>
+          <div className="flex justify-center items-center text-red-500/85 font-bold text-xl">Записей пока нет...</div>
           :
           <TaskList
             data={data}

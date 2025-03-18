@@ -24,7 +24,7 @@ export const SelectStatus = (
         <div className="flex px-2 py-2 justify-start items-center gap-2">
             <span>Фильтр по статусу:</span>
             <select
-                className={`flex self-start px-2 py-1 gap-2 items-center rounded-sm cursor-pointer text-center border outline-none bg-slate-400 ${status}`}
+                className={`flex self-start px-4 py-2 gap-2 items-center rounded-sm cursor-pointer text-center border outline-none bg-slate-400 ${status}`}
                 onChange={(e) => setStatus(e.target.value)}
                 value={status}
             >
@@ -43,12 +43,12 @@ export const SelectStatus = (
                 )}
             </select>
 
-            {isEditTitle ? <span className="bg-green-500/85  px-2 py-1 cursor-pointer  flex items-center"
+            {isEditTitle ? <span className="text-green-500/85  px-2 py-1 cursor-pointer  flex items-center"
                 onClick={() => {
                     setIsEditTitle(false)
                     localStorage.setItem('selectedStatus', status);
                 }}>
-                <FaSave className="text-xl" />
+                <FaSave className="text-2xl" />
             </span>
                 : <span className="text-red-500/85  px-2 py-1 cursor-pointer flex items-center"
                     onClick={() => {
@@ -57,7 +57,7 @@ export const SelectStatus = (
                         localStorage.setItem('selectedStatus', '');
                     }}
                 >
-                    <FaEdit className="text-xl" />
+                    <FaEdit className="text-2xl" />
                 </span>
             }
         </div>

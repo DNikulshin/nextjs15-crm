@@ -56,13 +56,13 @@ export const Comment = ({ userId, comment }: Props) => {
         setCommentToDelete('');
     };
 
-    if(deleteComment.isPending) {
-        return <Loader/>
+    if (deleteComment.isPending) {
+        return <Loader />
     }
 
 
     return (
-        <div key={comment.id} className="flex flex-col gap-2 shadow-sm relative pt-8 pb-2">
+        <div key={comment.id} className="flex flex-col gap-2 shadow-sm relative pt-8">
             <div className="flex  items-center justify-baseline gap-4">
                 {(comment.userId === userId) &&
                     <button className="text-sm"
@@ -70,10 +70,10 @@ export const Comment = ({ userId, comment }: Props) => {
                     >
                         {isEditComment
                             ? <span className="text-green-500/85 py-1 cursor-pointer  flex items-center">
-                                <FaSave className="text-xl" />
+                                <FaSave className="text-2xl" />
                             </span>
                             : <span className="text-red-500/85 py-1 cursor-pointer flex items-center">
-                                <FaEdit className="text-xl" />
+                                <FaEdit className="text-2xl" />
                             </span>
                         }
                     </button>}
@@ -95,12 +95,12 @@ export const Comment = ({ userId, comment }: Props) => {
                 />}
 
             <div className="flex gap-2">
-                <span className="text-xl self-start"><FaRegMessage /></span>
+                <span className="text-2xl self-start"><FaRegMessage /></span>
                 <p className="word-break">{comment.content}</p>
             </div>
             <div className="flex justify-between items-center shadow-md py-2">
                 <div className="flex gap-2">
-                    <span className="text-xl"><MdUpdate /></span>
+                    <span className="text-2xl"><MdUpdate /></span>
                     {formatDate({ date: comment.updatedAt })}
                 </div>
 
@@ -108,7 +108,7 @@ export const Comment = ({ userId, comment }: Props) => {
             </div>
 
             {(comment.userId === userId) && <button
-                className="text-white items-center flex justify-center absolute right-1 top-1 bg-red-500 px-2  disabled:bg-gray-400 cursor-pointer"
+                className="text-white items-center flex justify-center absolute right-1 top-1 bg-red-500 px-3 py-1 text-xl  disabled:bg-gray-400 cursor-pointer"
                 onClick={() => handleDeleteClick(comment.id)}
                 disabled={deleteComment.isPending && updateComentById.isPending}
             >
