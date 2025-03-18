@@ -46,7 +46,7 @@ export const CommentList = ({ comments, userId, taskId, isVisibleCommets }: Prop
 
     return (
         <div className="flex flex-col gap-2 border-t-1 pt-2">
-            <div className="flex flex-col gap-3 w-full shadow-md px-2 py-2">
+            <div className="flex flex-col gap-3 w-full shadow-md px-2 py-2 pb-4">
                 {!send && <textarea
                     className="border px-2 py-1 min-h-fit"
                     onChange={(e) => setContent(e.target.value)}
@@ -58,7 +58,7 @@ export const CommentList = ({ comments, userId, taskId, isVisibleCommets }: Prop
                 <button
                     onClick={() => setSend(!send)}
 
-                    className="bg-green-500 self-end px-2 py-1 rounded-sm shadow-sm"
+                    className="bg-green-500 self-end px-4 py-2 rounded-sm shadow-sm shadow-green-500/50"
 
                 >
                     <span className='text-xl cursor-pointer'>

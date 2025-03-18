@@ -24,7 +24,7 @@ export const Select = ({ task }: { task: IDataTask }) => {
 
     return (
         <select
-            className={`rounded-sm cursor-pointer text-center border outline-none ${task.status}`}
+            className={`rounded-sm px-2 py-1 cursor-pointer text-center border outline-none ${task.status}`}
             onChange={(e) => {
                 if (e.target.value === 'new') return
 
