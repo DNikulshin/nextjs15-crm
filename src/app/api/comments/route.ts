@@ -1,9 +1,15 @@
 // import { Comment} from "@prisma/client";
 import { IDataComment, IFormDataCreateComment } from "@/types/types";
 import { prismaClient } from "../../../../prisma/prismaClient";
+import { checkApiKey, createResponse } from "@/shared/utils/checkApiKeyHandler";
 
 export async function GET(req: Request) {
     try {
+
+        if (!await checkApiKey(req)) {
+            return createResponse({ message: 'Unauthorized' }, 401);
+        }
+        
 
         const url = new URL(req.url);
         const taskId = url.searchParams.get('taskId') ?? undefined
@@ -43,6 +49,11 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
     try {
+
+        if (!await checkApiKey(req)) {
+            return createResponse({ message: 'Unauthorized' }, 401);
+        }
+        
         const newComment: IFormDataCreateComment = await req.json()
 
         console.log(newComment.updatedAt)
@@ -81,6 +92,10 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
     try {
+        if (!await checkApiKey(req)) {
+            return createResponse({ message: 'Unauthorized' }, 401);
+        }
+        
 
         const updateComment: IDataComment = await req.json()
 
@@ -113,6 +128,10 @@ export async function PATCH(req: Request) {
 export async function DELETE(req: Request) {
     try {
 
+        if (!await checkApiKey(req)) {
+            return createResponse({ message: 'Unauthorized' }, 401);
+        }
+        
         const taskId = await req.json()
 
         const deleteComment = await prismaClient.comment.delete({

@@ -1,6 +1,7 @@
 import { Task } from '@prisma/client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { IDataTask, IFormDataCreateTask, ResponseDataTask } from '../types/types'
+import { fetchInstance } from '@/shared/utils/fetch-instance';
 
 const fetcTasks = async ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }): Promise<ResponseDataTask> => {
     try {
@@ -11,11 +12,7 @@ const fetcTasks = async ({ status, startDate, endDate }: { status?: string, star
             ...(endDate ? { endDate } : {})
         });
 
-        const response = await fetch(`/api/tasks?${params.toString()}`);
-
-
-        return await response.json() as ResponseDataTask
-
+        return await fetchInstance(`/api/tasks?${params.toString()}`);
     } catch (error) {
 
         throw error
@@ -25,28 +22,11 @@ const fetcTasks = async ({ status, startDate, endDate }: { status?: string, star
 
 const create = async (task: IFormDataCreateTask, signal: AbortSignal): Promise<Task> => {
     try {
-        const response = await fetch('/api/tasks', {
+        return await fetchInstance('/api/tasks', {
             method: "POST",
             body: JSON.stringify(task),
             signal
         })
-        return await response.json()
-
-    } catch (error) {
-        throw error
-    }
-}
-
-
-const remove = async (id: string, signal: AbortSignal): Promise<{ id: string }> => {
-    try {
-        const response = await fetch('/api/tasks', {
-            method: "DELETE",
-            body: JSON.stringify(id),
-            signal
-        })
-
-        return await response.json()
 
     } catch (error) {
         throw error
@@ -55,25 +35,46 @@ const remove = async (id: string, signal: AbortSignal): Promise<{ id: string }> 
 
 const update = async (task: IDataTask, signal: AbortSignal): Promise<Task> => {
     try {
-        const response = await fetch('/api/tasks', {
+        return await fetchInstance('/api/tasks', {
             method: "PATCH",
             body: JSON.stringify(task),
             signal
         })
 
-        return await response.json()
     } catch (error) {
         throw error
     }
 }
 
-const useRemoveTask = () => {
+const remove = async (id: string, signal: AbortSignal): Promise<{ id: string }> => {
+    try {
+        return await fetchInstance('/api/tasks', {
+            method: "DELETE",
+            body: JSON.stringify(id),
+            signal
+        })
+
+    } catch (error) {
+        throw error
+    }
+}
+
+const useTasks = ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }) => {
+
+    return useQuery({
+        queryKey: ['tasks', status, startDate, endDate],
+        queryFn: () => fetcTasks({ status, startDate, endDate }),
+        refetchInterval: 60000
+    })
+}
+
+const useCreateNewTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: async (id: string) => {
+        mutationFn: async (task: IFormDataCreateTask) => {
             const controller = new AbortController()
             const signal = controller.signal
-            const mutation = remove(id, signal)
+            const mutation = create(task, signal)
             try {
                 return await mutation;
             } finally {
@@ -83,15 +84,6 @@ const useRemoveTask = () => {
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
         }
-    })
-}
-
-const useTasks = ({ status, startDate, endDate }: { status?: string, startDate?: string, endDate?: string }) => {
-
-    return useQuery({
-        queryKey: ['tasks', status, startDate, endDate],
-        queryFn: () => fetcTasks({ status, startDate, endDate }),
-        refetchInterval: 60000
     })
 }
 
@@ -114,13 +106,13 @@ const useUpdateTask = () => {
     })
 }
 
-const useCreateNewTask = () => {
+const useRemoveTask = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: async (task: IFormDataCreateTask) => {
+        mutationFn: async (id: string) => {
             const controller = new AbortController()
             const signal = controller.signal
-            const mutation = create(task, signal)
+            const mutation = remove(id, signal)
             try {
                 return await mutation;
             } finally {
@@ -132,5 +124,6 @@ const useCreateNewTask = () => {
         }
     })
 }
+
 
 export { useTasks, useCreateNewTask, useUpdateTask, useRemoveTask }

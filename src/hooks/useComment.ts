@@ -1,3 +1,4 @@
+import { fetchInstance } from "@/shared/utils/fetch-instance";
 import { IDataComment, IFormDataCreateComment } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -11,10 +12,7 @@ const fetchComments = async ({ taskId = '', userId = '' }: { taskId?: string, us
     });
 
     try {
-        const response = await fetch(`/api/comments?${params.toString()}`);
-
-        return await response.json() as Comment[]
-
+       return  await fetchInstance(`/api/comments?${params.toString()}`);
     } catch (error) {
 
         throw error
@@ -23,13 +21,11 @@ const fetchComments = async ({ taskId = '', userId = '' }: { taskId?: string, us
 
 const create = async (comment: IFormDataCreateComment, signal: AbortSignal): Promise<Comment> => {
     try {
-        const response = await fetch('/api/comments', {
+      return await fetchInstance('/api/comments', {
             method: "POST",
             body: JSON.stringify(comment),
             signal
         })
-        return await response.json()
-
     } catch (error) {
         throw error
     }
@@ -37,13 +33,11 @@ const create = async (comment: IFormDataCreateComment, signal: AbortSignal): Pro
 
 const update = async (comment: IDataComment, signal: AbortSignal): Promise<Comment> => {
     try {
-        const response = await fetch('/api/comments', {
+        return await fetchInstance('/api/comments', {
             method: "PATCH",
             body: JSON.stringify(comment),
             signal
         })
-
-        return await response.json()
 
     } catch (error) {
         throw error
@@ -52,13 +46,11 @@ const update = async (comment: IDataComment, signal: AbortSignal): Promise<Comme
 
 const remove = async (id: string, signal: AbortSignal): Promise<{ id: string }> => {
     try {
-        const response = await fetch('/api/comments', {
+        return await fetchInstance('/api/comments', {
             method: "DELETE",
             body: JSON.stringify(id),
             signal
         })
-
-        return await response.json()
 
     } catch (error) {
         throw error
