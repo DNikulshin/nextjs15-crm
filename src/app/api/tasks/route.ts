@@ -2,11 +2,17 @@ import { TaskStatus } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/prismaClient";
 import { IDataTask, IFormDataCreateTask } from "../../../types/types";
 import { getDateTimeInTimeZone } from "@/shared/utils/getDateTimeInTimeZone ";
+import { checkApiKey, createResponse } from "@/shared/utils/checkApiKeyHandler";
 
 //const timeZone = 'Europe/Moscow';
 
 export async function GET(req: Request) {
     try {
+
+        if (!await checkApiKey(req)) {
+            return createResponse({ message: 'Unauthorized' }, 401);
+        }
+
         const url = new URL(req.url);
         const status = url.searchParams.get('status') as TaskStatus;
         const startDate = url.searchParams.get('startDate');
@@ -96,6 +102,10 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
     try {
+        if (!await checkApiKey(req)) {
+            return createResponse({ message: 'Unauthorized' }, 401);
+        }
+
         const newTask: IFormDataCreateTask = await req.json()
 
         const task = await prismaClient.task.create({
@@ -127,7 +137,9 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
     try {
-
+        if (!await checkApiKey(req)) {
+            return createResponse({ message: 'Unauthorized' }, 401);
+        }
         const updateTask: IDataTask = await req.json()
 
 
@@ -162,6 +174,10 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
     try {
+       
+        if (!await checkApiKey(req)) {
+            return createResponse({ message: 'Unauthorized' }, 401);
+        }
 
         const taskId = await req.json()
 
