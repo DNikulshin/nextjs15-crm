@@ -1,13 +1,12 @@
-"use client";
+"use client"
 
-import { useActionState } from "react";
-import { login } from "../../app/login/actions";
+import { useActionState } from "react"
+import { login } from "../../app/login/actions"
 import Link from "next/link";
-import { SubmitButton } from "./SubmitButton";
+import { SubmitButton } from "./SubmitButton"
 
 export function LoginForm() {
-  const [state, loginAction] = useActionState(login, undefined);
-
+  const [state, loginAction] = useActionState(login, undefined)
 
   return (
     <form action={loginAction} className="justify-start pt-10 md:justify-center flex max-w-[300px] flex-col gap-5 h-screen items-center mx-auto">

@@ -1,14 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
 import { register } from "../../app/register/actions";
 import Link from "next/link";
 import { SubmitButton } from "./SubmitButton";
 
 export function RegisterForm() {
   const [state, registerAction] = useActionState(register, undefined);
-  const { pending } = useFormStatus();
+ 
 
   return (
     <form action={registerAction} className="justify-start pt-10 md:justify-center flex max-w-[300px] flex-col gap-5 h-screen items-center mx-auto">
@@ -37,7 +36,7 @@ export function RegisterForm() {
       {state?.errors?.password && (
         <p className="text-red-500 break-words">{state.errors.password}</p>
       )}
-      <SubmitButton isPending={pending} isPendingText="Подождите..." text="Регистрация" />
+      <SubmitButton isPendingText="Подождите..." text="Регистрация" />
       <p className="self-start">Есть аккаунт ? <Link className="text-blue-600 underline text-lg font-bold ml-2" href="/login">Войти</Link></p>
     </form>
   );
