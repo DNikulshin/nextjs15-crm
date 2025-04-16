@@ -23,6 +23,7 @@ model Task {
   number      Int?       @default(autoincrement())
   title       String
   description String?
+  images      Image[]
   status      TaskStatus @default(new)
   report      String?
   user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -34,15 +35,27 @@ model Task {
 }
 
 model Comment {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   content String
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
-  task    Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  task    Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId  String
+  images  Image[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  title     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Task      Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId    String?
+  Comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String?
 }
 
 enum TaskStatus {
