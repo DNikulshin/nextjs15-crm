@@ -1,14 +1,12 @@
-"use client";
+"use client"
 
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
-import { login } from "../../app/login/actions";
+import { useActionState } from "react"
+import { login } from "../../app/login/actions"
 import Link from "next/link";
-import { SubmitButton } from "./SubmitButton";
+import { SubmitButton } from "./SubmitButton"
 
 export function LoginForm() {
-  const [state, loginAction] = useActionState(login, undefined);
-  const { pending } = useFormStatus();
+  const [state, loginAction] = useActionState(login, undefined)
 
   return (
     <form action={loginAction} className="justify-start pt-10 md:justify-center flex max-w-[300px] flex-col gap-5 h-screen items-center mx-auto">
@@ -37,7 +35,7 @@ export function LoginForm() {
       {state?.errors?.password && (
         <p className="text-red-500 break-words">{state.errors.password}</p>
       )}
-      <SubmitButton isPending={pending} isPendingText="Подождите..." text="Войти" />
+      <SubmitButton isPendingText="Подождите..." text="Войти" />
 
       <p className="self-start">Нет аккаунта ? <Link className="text-blue-600 underline text-lg font-bold ml-2" href="/register">Регистрация</Link></p>
     </form>
